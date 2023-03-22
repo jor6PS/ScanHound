@@ -11,7 +11,10 @@ def get_source(host, port, service):
     try:
         response = requests.get(url)
         if response.status_code == 200:
-            return response.text
+            source_file = f"/home/kali/TFG/{organizacion}/source/{host}_{port}.txt"
+            with open(source_file, "w") as f:
+                f.write(response.text)
+            return source_file
         else:
             return "Error: No se pudo obtener el código fuente"
     except:
@@ -19,7 +22,7 @@ def get_source(host, port, service):
     
 # Función para tomar una captura de pantalla de una URL
 def get_screenshot(host, port, service):
-    try:
+#    try:
         url = f"{service}://{host}:{port}"
         driver = webdriver.Firefox()
         driver.get(url)
@@ -28,28 +31,31 @@ def get_screenshot(host, port, service):
         driver.save_screenshot(image_file)
         driver.quit()
         return image_file
-    except:
-        print("Error al tomar la captura de pantalla de la URL.")
+#    except:
+#        print("Error al tomar la captura de pantalla de la URL.")
 
 # Pide al usuario que ingrese el nombre de la organización para la creación de directorios
 organizacion = input("Ingresa el nomnbre de la organizacion (Ej. UOC, Google): ")
 folder_path = f"/home/kali/TFG/{organizacion}"
 folder_img_path = f"/home/kali/TFG/{organizacion}/img"
+folder_src_path = f"/home/kali/TFG/{organizacion}/source"
 
 if not os.path.exists(folder_path):
     os.makedirs(folder_path)
 if not os.path.exists(folder_img_path):
     os.makedirs(folder_img_path)
+if not os.path.exists(folder_src_path):
+    os.makedirs(folder_src_path)
 
 # Pide al usuario que ingrese el rango de IP a escanear
 ip_range = input("Ingresa el rango de IP a escanear (Ej. 192.168.1.0/24): ")
 
-# Crea un objeto de tipo nmap.PortScanner()
-scanner = nmap.PortScanner()
-
 # Pide al usuario que ingrese el nombre del archivo CSV para guardar los resultados
 filename = input("Ingresa el nombre del archivo CSV para guardar los resultados: ")
 csv_path = f"/home/kali/TFG/{organizacion}/{filename}"
+
+# Crea un objeto de tipo nmap.PortScanner()
+scanner = nmap.PortScanner()
 
 # Escaneo completo con información detallada
 scanner.scan(hosts=ip_range, arguments='-sn')
