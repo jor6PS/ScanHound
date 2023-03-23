@@ -50,7 +50,7 @@ def get_screenshot(host, port, service):
 
 # Pide al usuario que ingrese el nombre de la organización para la creación de directorios
 organizacion = input("Ingresa el nomnbre de la organizacion (Ej. UOC, Google): ")
-folder_path = f"{organizacion}"
+folder_path = f"results/{organizacion}"
 
 if not os.path.exists(folder_path):
     os.makedirs(folder_path)
@@ -59,7 +59,9 @@ if not os.path.exists(folder_path):
 ip_range = input("Ingresa el rango de IP a escanear (Ej. 192.168.1.0/24): ")
 if '/' in ip_range:
     ip_range_name = ip_range.replace('/', '\\')
-scan_path = f"{organizacion}/{date_today}_{ip_range_name}"
+else:
+    ip_range_name = ip_range
+scan_path = f"{folder_path}/{date_today}_{ip_range_name}"
 csv_path = f"{scan_path}/{ip_range_name}.csv"
 folder_img_path = f"{scan_path}/img"
 folder_src_path = f"{scan_path}/source"
@@ -79,7 +81,7 @@ scanner = nmap.PortScanner()
 print("Comienza el escaneo!!!")
 
 # Escaneo completo con información detallada
-scanner.scan(hosts=ip_range, arguments='--min-rate 5000 -n -Pn -p-')
+scanner.scan(hosts=ip_range, arguments='--min-rate 5000 -n -p-')
 # Crear una lista para almacenar los puertos abiertos de cada host
 hosts = {}
 # Recorremos los resultados del escaneo
