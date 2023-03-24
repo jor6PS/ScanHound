@@ -55,7 +55,7 @@ def get_vulns(host, port, vulns):
             f.write(vulns)
         return vulns_file
     except:
-        return "Error: No se pudieron capturar las vulnerabilidades")
+        return "Error: No se pudieron capturar las vulnerabilidades"
         
         
 # Pide al usuario que ingrese el nombre de la organización para la creación de directorios
@@ -143,4 +143,3 @@ with open(json_path, 'w') as jsonfile:
 
     # Escribe los datos en formato JSON
     json.dump(data, jsonfile, indent=4)
-
