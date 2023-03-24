@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+<meta charset="UTF-8" />
+<link rel="icon" href="images/favicon.ico">
+<script type="text/javascript">
+	var G_top = 1;
+	var scripts = {
+		cgi: ["authpage"],
+		other: ["menulist.js", "lang/en.js", "lang/sp.js"]
+	};
+</script>
+<script type="text/javascript" src="js/loadScripts.js"></script>
+<script type="text/javascript" language="javascript">
+    if(window.top != window.self) {
+        window.top.location = "index.htm";
+    }
+    /* thise store the original menu*/
+    var DEF_PG = "firstlogin.htm";
+
+    var G_IP = '';
+    var G_URL = '';
+    var G_menu = "";
+
+    var G_prog = 0;
+    var G_next = DEF_PG;
+    var G_wizard=0;
+
+    var G_err=0;
+    var G_errmsg="";
+    var G_wait=0;
+
+    var bUsrisLogined = parseInt('0'+'-1');
+
+    function checkTopConnect(){
+        setTimeout("topFrame.checkConnect()", 300);
+    }
+
+    function init() {
+        if(G_next.length == 0)
+            G_next = DEF_PG;
+
+		var judge = window.sessionStorage["session"];
+		var boot_id = getCfg("boot_id");
+		var boot_idbefore = window.sessionStorage["boot_id"];
+		/*check first connection, if not redirect to firstconnection.htm*/
+
+		var redirect_net_connected_page = top.getCookie("redirect_net_connected");
+/* + 10524-939 OSP_ARC245 + */
+		if( (getCfg("first_valid")== "0" ) && (redirect_net_connected_page == null) && (bUsrisLogined == 0) ) {
+			window.sessionStorage["boot_id"] = boot_id;
+			top.location.href = 'firstconnection.htm';
+		}
+/* - 10524-939 OSP_ARC245 - */		
+		else if( getCfg("conn_hurl_eb")=="1" && getCfg("slid_value")=="00000000000000000000" &&
+		    (judge!=1 || boot_id != boot_idbefore)) {
+			window.sessionStorage["boot_id"] = boot_id;
+			top.location.href = 'firstconnection.htm';
+		}
+		window.sessionStorage["boot_id"] = boot_id;
+
+        if(bUsrisLogined == 0) {
+	     	G_next = DEF_PG;
+            setCookie("menu_sel", 0);
+            setCookie("menu_adv", 0);
+
+			top.deleteCookie("redirect_net_connected"); /* 10524-939 OSP_ARC245 */
+        } else {
+			var G_URL = GetDefPg();
+
+			if(G_URL == "index.htm")
+				G_URL="network_connected.htm";
+			if(G_URL)
+				G_next = G_URL;
+        }
+
+        SetDefPg(G_next);
+        window_location_replace("mainFrame", G_next);
+    }
+</script>
+</head>
+
+<frameset border="0" framespacing="0" rows="140,*,0" frameborder="0" onload="init()">
+    <frame name="topFrame" id="topFrame" src="top.htm">
+    <frame name="mainFrame" id="mainFrame" src="">
+    <frame name="OUTfrm" id="OUTfrm" src="" noresize="noresize" scrolling="no">
+
+</frameset>
+</html>
