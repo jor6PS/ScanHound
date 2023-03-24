@@ -25,8 +25,9 @@ Para cargar un fichero JSON modificar la línea de código del programa Scan2Neo
 ```python
 file_path = "/home/kali/TFG/results/Casa/2023-03-24_192.168.15.0\\24/192.168.15.0\\25.json"
 ```
-
 El resultado en Neo4 por el momento se muestar de la sigueitne manera:
+
+![Alt text](https://github.com/jor6PS/ScanHound/blob/main/images/grafo_scanhound.png?raw=true "Estado actual")
 
 ## TODO
 
