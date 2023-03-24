@@ -68,7 +68,7 @@ if not os.path.exists(folder_path):
 # Pide al usuario que ingrese el rango de IP a escanear y crea los directorios
 ip_range = input("Ingresa el rango de IP a escanear (Ej. 192.168.1.0/24): ")
 if '/' in ip_range:
-    ip_range_name = ip_range.replace('/', '\\')
+    ip_range_name = ip_range.replace('/', ':')
 else:
     ip_range_name = ip_range
 scan_path = f"{folder_path}/{date_today}_{ip_range_name}"

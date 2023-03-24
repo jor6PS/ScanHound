@@ -1,43 +1,69 @@
 from py2neo import Graph, Node, Relationship
+import json
+import os
 
 # establecer conexión a la base de datos
 graph = Graph("bolt://localhost:7687", auth=("neo4j", "neo4j1"))
 
-# cargar archivo json en una variable
-import json
+def search_json_files(folder_path):
+    json_files = {}
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            if file.endswith('.json'):
+                file_path = os.path.join(root, file)
+                folder_name = os.path.dirname(file_path).replace(folder_path, '').lstrip(os.path.sep).split(os.path.sep)[0]
+                json_files[folder_name] = json_files.get(folder_name, []) + [file_path]
+    return json_files
 
-file_path = "/home/kali/TFG/results/Casa/2023-03-24_192.168.15.0\\24/192.168.15.0\\25.json"
-with open(file_path) as f:
-    data = json.load(f)
+json_files = search_json_files('results/')
 
-# Recorremos los nodos principales (direcciones IP)
-for ip, ports in data.items():
-    # Merge or create the IP node
-    ip_node = Node("IP", address=ip)
-    existing_ip = graph.nodes.match("IP", address=ip).first()
-    if existing_ip:
-        ip_node = existing_ip
+for folder, files in json_files.items():
+    # Creamos el nodo del folder y lo agregamos a la base de datos
+    folder_node = Node("Folder", name=folder)
+    existing_folder = graph.nodes.match("Folder", name=folder).first()
+    if existing_folder:
+        folder_node = existing_folder
     else:
-        graph.create(ip_node)
+        graph.create(folder_node)
+    
+    for file in files:
+        date_str = file.split('_')[0]
+        date_str = date_str.split('/')[2]
+        with open(file, 'r') as f:
+            data = json.load(f)
 
-    # Create or merge the port nodes
-    for port_number, port_data in ports.items():
-        existing_port = graph.nodes.match("Port", number=port_number).first()
+            # Recorremos los nodos principales (direcciones IP)
+            for ip, ports in data.items():
+                # Merge or create the IP node
+                ip_node = Node("IP", address=ip)
+                existing_ip = graph.nodes.match("IP", address=ip).first()
+                if existing_ip:
+                    ip_node = existing_ip
+                else:
+                    graph.create(ip_node)
 
-        if existing_port is not None:
-            # Check if the attributes of the existing port are the same as the new port
-            if all(existing_port.get(key) == value for key, value in port_data.items()):
-                # If the attributes are the same, use the existing port node
-                port_node = existing_port
-            else:
-                # If the attributes are different, create a new port node
-                port_node = Node("Port", number=port_number, **port_data)
-                graph.create(port_node)
-        else:
-            # If there is no existing port, create a new port node
-            port_node = Node("Port", number=port_number, **port_data)
-            graph.create(port_node)
+                # Create or merge the port nodes
+                for port_number, port_data in ports.items():
+                    existing_port = graph.nodes.match("Port", number=port_number, date=date_str).first()
 
-        # Creamos una relación entre la dirección IP y el puerto
-        ip_port_rel = Relationship(ip_node, "HAS_PORT", port_node)
-        graph.create(ip_port_rel)
+                    if existing_port is not None:
+                        # Check if the attributes of the existing port are the same as the new port
+                        if all(existing_port.get(key) == value for key, value in port_data.items()):
+                            # If the attributes are the same, use the existing port node
+                            port_node = existing_port
+                        else:
+                            # If the attributes are different, create a new port node
+                            port_node = Node("Port", number=port_number, date=date_str, **port_data)
+                            graph.create(port_node)
+                    else:
+                        # If there is no existing port, create a new port node
+                        port_node = Node("Port", number=port_number, date=date_str, **port_data)
+                        graph.create(port_node)
+
+                    # Creamos una relación entre el folder y la dirección IP
+                    folder_ip_rel = Relationship(folder_node, "HAS_IP", ip_node)
+                    graph.create(folder_ip_rel)
+                    
+                    # Creamos una relación entre la dirección IP y el puerto
+                    ip_port_rel = Relationship(ip_node, "HAS_PORT", port_node)
+                    graph.create(ip_port_rel)
