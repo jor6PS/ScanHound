@@ -20,32 +20,14 @@ Para cargar los archivos json en la base de datos Neo4j, seguir los siguietnes p
     - Reinicia Neo4j.
     - Verifica que la biblioteca APOC se haya cargado correctamente ejecutando el comando CALL dbms.procedures() en la consola de Neo4j. Si la biblioteca se cargó correctamente, deberías ver una lista de procedimientos que incluya los procedimientos APOC.
 
-En la consola de Neo4j, ejecuta el siguiente comando para cargar el archivo JSON en la base de datos:
+Para cargar un fichero JSON modificar la línea de código del programa Scan2Neo.py con el Json desado:
 
-```sql
-// cargar archivo json en una variable
-WITH 'file:{path del fichero JSON dentro de la carpeta /import de neo4j}' AS url
-CALL apoc.load.json(url) YIELD value AS data
-
-// crear nodos y relaciones
-UNWIND keys(data) AS ip
-MERGE (node_ip:IP {address: ip})
-WITH node_ip, data[ip] AS ports
-UNWIND keys(ports) AS port
-MERGE (node_port:Port {number: port})
-ON CREATE SET 
-  node_port.Hostname = ports[port].Hostname,
-  node_port.Protocol = ports[port].Protocol,
-  node_port.State = ports[port].State,
-  node_port.Service = ports[port].Service,
-  node_port.Product = ports[port].Product,
-  node_port.Version = ports[port].Version,
-  node_port.Vulners = ports[port].Vulners,
-  node_port.WebSource = ports[port].WebSource,
-  node_port.Screenshot = ports[port].Screenshot
-MERGE (node_ip)-[:CONNECTED_TO]->(node_port)
+```python
+file_path = "/home/kali/TFG/results/Casa/2023-03-24_192.168.15.0\\24/192.168.15.0\\25.json"
 ```
+
+El resultado en Neo4 por el momento se muestar de la sigueitne manera:
 
 ## TODO
 
-- Automatizar la carga de todos los ficheros JSON en neo4j
+- Gestionar la carga de los ficheros de vulnerabilidades, código fuente y capturas de pantalla en la BBDD Neo4j.
