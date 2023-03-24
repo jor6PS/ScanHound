@@ -1,4 +1,4 @@
-import csv
+import json
 import os
 import nmap
 import requests
@@ -46,8 +46,18 @@ def get_screenshot(host, port, service):
         driver.quit()
         return image_file
     except:
-        print("Error al tomar la captura de pantalla de la URL.")
+        return "Error al tomar la captura de pantalla de la URL."
 
+def get_vulns(host, port, vulns):
+    try:
+        vulns_file = f"{folder_vuln_path}/{host}_{port}.txt"
+        with open('vulns_file', 'w') as f:
+            f.write(vulns)
+        return vulns_file
+    except:
+        return "Error: No se pudieron capturar las vulnerabilidades")
+        
+        
 # Pide al usuario que ingrese el nombre de la organización para la creación de directorios
 organizacion = input("Ingresa el nomnbre de la organizacion (Ej. UOC, Google): ")
 folder_path = f"results/{organizacion}"
@@ -62,9 +72,10 @@ if '/' in ip_range:
 else:
     ip_range_name = ip_range
 scan_path = f"{folder_path}/{date_today}_{ip_range_name}"
-csv_path = f"{scan_path}/{ip_range_name}.csv"
+json_path = f"{scan_path}/{ip_range_name}.json"
 folder_img_path = f"{scan_path}/img"
 folder_src_path = f"{scan_path}/source"
+folder_vuln_path = f"{scan_path}/vuln"
 
 if not os.path.exists(scan_path):
     os.makedirs(scan_path)
@@ -72,6 +83,8 @@ if not os.path.exists(folder_img_path):
     os.makedirs(folder_img_path)
 if not os.path.exists(folder_src_path):
     os.makedirs(folder_src_path)
+if not os.path.exists(folder_vuln_path):
+    os.makedirs(folder_vuln_path)
     
     
 # Crea un objeto de tipo nmap.PortScanner()
@@ -99,10 +112,9 @@ for host in scanner.all_hosts():
     if open_ports:
         print('Host : %s, Ports : %s' % (host, open_ports))
 
-# Abre el archivo CSV en modo escritura y escribe los resultados
-with open(csv_path, 'w', newline='') as csvfile:
-    writer = csv.writer(csvfile, delimiter=',')
-    writer.writerow(['IP', 'Hostname', 'Protocol', 'Port', 'State', 'Service', 'Product', 'Version', 'Vulners', 'Web Source', 'Screenshot'])
+# Abre el archivo JSON en modo escritura y escribe los resultados
+with open(json_path, 'w') as jsonfile:
+    data = {}
 
     # Escaneo de puertos específicos en los hosts obtenidos
     num_host = 0
@@ -110,21 +122,25 @@ with open(csv_path, 'w', newline='') as csvfile:
         num_host += 1
         print(f"Escaneando host {num_host}/{len(hosts.keys())}: {host}")
         ports = ','.join(map(str, hosts[host]))
-        scanner.scan(hosts=host, ports=ports, arguments='--min-rate 5000 -A -Pn -sV --script vulners')
+        scanner.scan(hosts=host, ports=ports, arguments='-A -Pn --script vulners')
         if host in scanner.all_hosts():
+            host_data = {}
             for proto in scanner[host].all_protocols():
                 lport = scanner[host][proto].keys()
                 for port in lport:
-                    writer.writerow([
-                    host,
-                    scanner[host].hostname(),
-                    proto,
-                    port,
-                    scanner[host][proto][port]['state'],
-                    scanner[host][proto][port]['name'],
-                    scanner[host][proto][port]['product'],
-                    scanner[host][proto][port]['version'],
-                    scanner[host][proto][port]["script"]["vulners"] if 'script' in scanner[host]['tcp'][port] and 'vulners' in scanner[host]['tcp'][port]['script'] else '',
-                    get_source(host, port, scanner[host][proto][port]['name']) if scanner[host][proto][port]['name'] in ['http', 'https'] or port in [80, 443, 8080] else "",
-                    get_screenshot(host, port, scanner[host][proto][port]['name']) if scanner[host][proto][port]['name'] in ['http', 'https'] or port in [80, 443, 8080] else ""
-                    ])
+                    host_data[port] = {
+                        'Hostname': scanner[host].hostname(),
+                        'Protocol': proto,
+                        'State': scanner[host][proto][port]['state'],
+                        'Service': scanner[host][proto][port]['name'],
+                        'Product': scanner[host][proto][port]['product'],
+                        'Version': scanner[host][proto][port]['version'],
+                        'Vulners': get_vulns(host, port,scanner[host][proto][port]["script"]["vulners"]) if 'script' in scanner[host]['tcp'][port] and 'vulners' in scanner[host]['tcp'][port]['script'] else '',
+                        'Web Source': get_source(host, port, scanner[host][proto][port]['name']) if scanner[host][proto][port]['name'] in ['http', 'https'] or port in [80, 443, 8080] else "",
+                        'Screenshot': get_screenshot(host, port, scanner[host][proto][port]['name']) if scanner[host][proto][port]['name'] in ['http', 'https'] or port in [80, 443, 8080] else ""
+                    }
+            data[host] = host_data
+
+    # Escribe los datos en formato JSON
+    json.dump(data, jsonfile, indent=4)
+
