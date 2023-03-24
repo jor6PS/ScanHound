@@ -20,11 +20,8 @@ Para cargar los archivos json en la base de datos Neo4j, seguir los siguietnes p
     - Reinicia Neo4j.
     - Verifica que la biblioteca APOC se haya cargado correctamente ejecutando el comando CALL dbms.procedures() en la consola de Neo4j. Si la biblioteca se cargó correctamente, deberías ver una lista de procedimientos que incluya los procedimientos APOC.
 
-Para cargar un fichero JSON modificar la línea de código del programa Scan2Neo.py con el Json desado:
+**Para cargar los resultados en la BBDD Neo4j simplemente ejecutar el script Scan2Neo.py**
 
-```python
-file_path = "/home/kali/TFG/results/Casa/2023-03-24_192.168.15.0\\24/192.168.15.0\\25.json"
-```
 El resultado en Neo4 por el momento se muestar de la sigueitne manera:
 
 ![Alt text](https://github.com/jor6PS/ScanHound/blob/main/images/grafo_scanhound.png?raw=true "Estado actual")
