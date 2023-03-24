@@ -25,7 +25,7 @@ def get_source(host, port, service):
                 f.write(response.text)            
             return source_file
         else:
-            return "Error: No se pudo obtener el código fuente"
+            return "Error: No se pudo obtener el codigo fuente"
     except:
         return "Error: No se pudo conectar al servicio web"
     
@@ -51,7 +51,7 @@ def get_screenshot(host, port, service):
 def get_vulns(host, port, vulns):
     try:
         vulns_file = f"{folder_vuln_path}/{host}_{port}.txt"
-        with open('vulns_file', 'w') as f:
+        with open(vulns_file, 'w') as f:
             f.write(vulns)
         return vulns_file
     except:
@@ -143,3 +143,4 @@ with open(json_path, 'w') as jsonfile:
 
     # Escribe los datos en formato JSON
     json.dump(data, jsonfile, indent=4)
+
