@@ -24,7 +24,7 @@ Para cargar los archivos json en la base de datos Neo4j, seguir los siguietnes p
 
 El resultado en Neo4 por el momento se muestar de la sigueitne manera:
 
-![Alt text](https://github.com/jor6PS/ScanHound/blob/main/images/grafo_scanhound_1.png?raw=true "Estado actual")
+![Alt text](https://github.com/jor6PS/ScanHound/blob/main/images/grafo_scanhound_3.png?raw=true "Estado actual")
 
 ## TODO
 
