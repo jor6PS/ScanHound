@@ -1,56 +1,51 @@
-import json
-import os
-import nmap
-import ipaddress
-import requests
 from selenium import webdriver
-import time
+import ipaddress
 import datetime
+import requests
+import time
+import json
+import nmap
+import os
 
 # Obtiene la fecha actual en formato año-mes-día
 date_today = datetime.datetime.today().strftime('%Y-%m-%d')
 
 # Subredes privadas de la IANA
-private_subnets = [    ipaddress.ip_network('10.0.0.0/8'),    ipaddress.ip_network('172.16.0.0/12'),    ipaddress.ip_network('192.168.0.0/16')]
-
+private_subnets = [    
+          ipaddress.ip_network('10.0.0.0/8'),    
+          ipaddress.ip_network('172.16.0.0/12'),    
+          ipaddress.ip_network('192.168.0.0/16')]
 
 # Método para obtener el código fuente de un servicio web
-def get_source(host, port, service):
-    if service not in ["http", "https"] and ('4' in str(port)):
-        url = f"https://{host}:{port}"
-    elif service not in ["http", "https"] and ('4' not in str(port)):
-        url = f"http://{host}:{port}"
-    else:
-        url = f"{service}://{host}:{port}"
+def get_source(host, port):
+    url = f"http://{host}:{port}"
     try:
         response = requests.get(url)
         if response.status_code == 200:
             source_file = f"{folder_src_path}/{host}_{port}.txt"
             with open(source_file, "w") as f:
                 f.write(response.text)            
-            return source_file
+            return response.text
         else:
             return "Error: No se pudo obtener el codigo fuente"
     except:
         return "Error: No se pudo conectar al servicio web"
     
 # Función para tomar una captura de pantalla de una URL
-def get_screenshot(host, port, service):
+def get_screenshot(host, port):
     try:
-        if service not in ["http", "https"] and ('4' in str(port)):
-            url = f"https://{host}:{port}"
-        elif service not in ["http", "https"] and ('4' not in str(port)):
-            url = f"http://{host}:{port}"
-        else:
-            url = f"{service}://{host}:{port}"
+        url = f"http://{host}:{port}"
         driver = webdriver.Firefox()
         driver.get(url)
+        # Establecer un temporizador de 5 segundos para la captura de pantalla
         time.sleep(5)
         image_file = f"{folder_img_path}/{host}_{port}.png"
         driver.save_screenshot(image_file)
         driver.quit()
         return image_file
     except:
+        # Si no se puede tomar la captura de pantalla, cerrar el controlador y continuar
+        driver.quit()
         return "Error al tomar la captura de pantalla de la URL."
 
 def get_vulns(host, port, vulns):
@@ -58,7 +53,7 @@ def get_vulns(host, port, vulns):
         vulns_file = f"{folder_vuln_path}/{host}_{port}.txt"
         with open(vulns_file, 'w') as f:
             f.write(vulns)
-        return vulns_file
+        return vulns
     except:
         return "Error: No se pudieron capturar las vulnerabilidades"
         
@@ -151,9 +146,9 @@ with open(json_path, 'w') as jsonfile:
                         'Service': scanner[host][proto][port]['name'],
                         'Product': scanner[host][proto][port]['product'],
                         'Version': scanner[host][proto][port]['version'],
-                        'Vulners': get_vulns(host, port,scanner[host][proto][port]["script"]["vulners"]) if 'script' in scanner[host]['tcp'][port] and 'vulners' in scanner[host]['tcp'][port]['script'] else '',
-                        'Web Source': get_source(host, port, scanner[host][proto][port]['name']) if scanner[host][proto][port]['name'] in ['http', 'https'] or port in [80, 443, 8080] else "",
-                        'Screenshot': get_screenshot(host, port, scanner[host][proto][port]['name']) if scanner[host][proto][port]['name'] in ['http', 'https'] or port in [80, 443, 8080] else ""
+                        'Vulners': get_vulns(host, port,scanner[host][proto][port]["script"]["vulners"]) if 'script' in scanner[host]['tcp'][port] and 'vulners' in scanner[host]['tcp'][port]['script'] else "",
+                        'Web Source': get_source(host, port) if scanner[host][proto][port]['name'] in ['http', 'https'] else "",
+                        'Screenshot': get_screenshot(host, port) if scanner[host][proto][port]['name'] in ['http', 'https'] else ""
                     }
             data[host] = host_data
 
