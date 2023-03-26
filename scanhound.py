@@ -1,6 +1,7 @@
 import json
 import os
 import nmap
+import ipaddress
 import requests
 from selenium import webdriver
 import time
@@ -8,6 +9,10 @@ import datetime
 
 # Obtiene la fecha actual en formato año-mes-día
 date_today = datetime.datetime.today().strftime('%Y-%m-%d')
+
+# Subredes privadas de la IANA
+private_subnets = [    ipaddress.ip_network('10.0.0.0/8'),    ipaddress.ip_network('172.16.0.0/12'),    ipaddress.ip_network('192.168.0.0/16')]
+
 
 # Método para obtener el código fuente de un servicio web
 def get_source(host, port, service):
@@ -124,11 +129,22 @@ with open(json_path, 'w') as jsonfile:
         ports = ','.join(map(str, hosts[host]))
         scanner.scan(hosts=host, ports=ports, arguments='-A -Pn --script vulners')
         if host in scanner.all_hosts():
-            host_data = {}
+            # Determinar la subred a la que pertenece la IP
+            ip = ipaddress.ip_address(host)
+            subnet = None
+            for private_subnet in private_subnets:
+                if ip in private_subnet:
+                    subnet = private_subnet
+                    break
+            
+            # Crear el diccionario de datos para la IP actual
+            host_data = {'ports': {}}
+            if subnet is not None:
+                host_data['subred'] = str(subnet)
             for proto in scanner[host].all_protocols():
                 lport = scanner[host][proto].keys()
                 for port in lport:
-                    host_data[port] = {
+                    host_data['ports'][port] = {
                         'Hostname': scanner[host].hostname(),
                         'Protocol': proto,
                         'State': scanner[host][proto][port]['state'],
@@ -143,4 +159,3 @@ with open(json_path, 'w') as jsonfile:
 
     # Escribe los datos en formato JSON
     json.dump(data, jsonfile, indent=4)
-
