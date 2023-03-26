@@ -66,21 +66,55 @@ for folder, files in json_files.items():
                         
                 # Create or merge the port nodes
                 for port_number, port_data in ip_data["ports"].items():
-                    existing_port = graph.nodes.match("Port", number=port_number, date=date_str).first()
-                    if existing_port is not None:
-                        # Check if the attributes of the existing port are the same as the new port
-                        if all(existing_port.get(key) == value for key, value in port_data.items()):
-                            # If the attributes are the same, use the existing port node
-                            port_node = existing_port
-                        else:
-                            # If the attributes are different, create a new port node
-                            port_node = Node("Port", number=port_number, date=date_str, **port_data)
-                            graph.create(port_node)
+                    port_node = Node("Port", number=port_number, date=date_str, **port_data)
+                    existing_port = graph.nodes.match("Port", number=port_number, date=date_str, **port_data).first()
+                    if existing_port:
+                        port_node = existing_port
                     else:
-                        # If there is no existing port, create a new port node
-                        port_node = Node("Port", number=port_number, date=date_str, **port_data)
                         graph.create(port_node)
-                    
+                        
                     # Creamos una relación entre la dirección IP y el puerto
                     ip_port_rel = Relationship(ip_node, "HAS_PORT", port_node)
                     graph.create(ip_port_rel)
+                    
+                    # Recorremos los puertos en busca de vulnerabilidades
+                    if ("Error: No se pudieron capturar las vulnerabilidades" not in port_data["Vulners"]) and (port_data["Vulners"] != ""):
+                        vulners = port_data["Vulners"]
+                        vulners_node = Node("Vulners", vulns=vulners)
+                        existing_vulners = graph.nodes.match("Vulners", vulns=vulners).first()
+                        if existing_vulners:
+                            vulners_node = existing_vulners
+                        else:
+                            graph.create(vulners_node)
+                            
+                        # Creamos una relación entre el puerto y las vulnerabilidades
+                        ports_vulns_rel = Relationship(port_node, "HAS_VULNS", vulners_node)
+                        graph.create(ports_vulns_rel)
+
+                    # Recorremos los puertos en busca de códigos fuente
+                    if ("Error: No se pudo obtener el codigo fuente" not in port_data["Web Source"]) and ("Error: No se pudo conectar al servicio web" not in port_data["Web Source"]) and (port_data["Web Source"] != ""):
+                        WebSource = port_data["Web Source"]
+                        websource_node = Node("Web Source", websource=WebSource)
+                        existing_websource = graph.nodes.match("Web Source", websource=WebSource).first()
+                        if existing_websource:
+                            websource_node = existing_websource
+                        else:
+                            graph.create(websource_node)
+                            
+                        # Creamos una relación entre el puerto y los códigos fuente
+                        ports_websource_rel = Relationship(port_node, "HAS_WEBSOURCE", websource_node)
+                        graph.create(ports_websource_rel)
+
+                    # Recorremos los puertos en busca de capturas de pantalla
+                    if ("Error al tomar la captura de pantalla de la URL." not in port_data["Screenshot"]) and (port_data["Screenshot"] != ""):
+                        Screenshot = port_data["Screenshot"]
+                        Screenshot_node = Node("Screenshot", Screenshot=Screenshot)
+                        existing_Screenshot = graph.nodes.match("Screenshot", Screenshot=Screenshot).first()
+                        if existing_Screenshot:
+                            Screenshot_node = existing_Screenshot
+                        else:
+                            graph.create(Screenshot_node)
+                            
+                        # Creamos una relación entre el puerto y los códigos fuente
+                        ports_Screenshot_rel = Relationship(port_node, "HAS_SCREENSHOT", Screenshot_node)
+                        graph.create(ports_Screenshot_rel)
