@@ -29,3 +29,9 @@ El resultado en Neo4 por el momento se muestar de la sigueitne manera:
 ## TODO
 
 - Gestionar la carga de los ficheros de vulnerabilidades, código fuente y capturas de pantalla en la BBDD Neo4j.
+
+## QUERIES
+
+MATCH x=(f:Folder)-[:HAS_SUBNET]->(sb:Subnet)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port)
+Where p.number="80"
+RETURN x
