@@ -92,7 +92,7 @@ for folder, files in json_files.items():
                         graph.create(ports_vulns_rel)
 
                     # Recorremos los puertos en busca de códigos fuente
-                    if ("Error: No se pudo obtener el codigo fuente" not in port_data["Web Source"]) and ("Error: No se pudo conectar al servicio web" not in port_data["Web Source"]) and (port_data["Web Source"] != ""):
+                    if ("Error: No se pudo obtener el codigo fuente" not in port_data["Web Source"]) and ("Error: No se pudo conectar al servicio web" not in port_data["Web Source"]) and ("Error: La conexion se ha agotado (timeout)" not in port_data["Web Source"]) and (port_data["Web Source"] != ""):
                         WebSource = port_data["Web Source"]
                         websource_node = Node("Web Source", websource=WebSource)
                         existing_websource = graph.nodes.match("Web Source", websource=WebSource).first()
