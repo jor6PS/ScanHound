@@ -1,3 +1,5 @@
+from selenium.common.exceptions import TimeoutException
+from requests.exceptions import Timeout
 from selenium import webdriver
 import ipaddress
 import datetime
@@ -12,15 +14,25 @@ date_today = datetime.datetime.today().strftime('%Y-%m-%d')
 
 # Subredes privadas de la IANA
 private_subnets = [    
-          ipaddress.ip_network('10.0.0.0/8'),    
-          ipaddress.ip_network('172.16.0.0/12'),    
-          ipaddress.ip_network('192.168.0.0/16')]
+          ipaddress.ip_network('10.32.0.0/23'),
+          ipaddress.ip_network('10.32.2.0/24'),
+          ipaddress.ip_network('10.32.16.0/23'),
+          ipaddress.ip_network('10.32.18.0/24'),
+          ipaddress.ip_network('10.32.19.0/24'),
+          ipaddress.ip_network('10.32.20.0/23'),
+          ipaddress.ip_network('10.32.22.0/24'),
+          ipaddress.ip_network('10.32.23.0/24'),
+          ipaddress.ip_network('10.32.24.0/24'),
+          ipaddress.ip_network('10.32.25.0/24'),
+          ipaddress.ip_network('10.32.26.0/24'),
+          ipaddress.ip_network('10.32.28.0/23'),
+          ipaddress.ip_network('10.32.30.0/24'),    
+          ipaddress.ip_network('10.32.31.0/24')]
 
-# Método para obtener el código fuente de un servicio web
 def get_source(host, port):
     url = f"http://{host}:{port}"
     try:
-        response = requests.get(url)
+        response = requests.get(url, timeout=5) # Agrega timeout de 5 segundos
         if response.status_code == 200:
             source_file = f"{folder_src_path}/{host}_{port}.txt"
             with open(source_file, "w") as f:
@@ -28,6 +40,8 @@ def get_source(host, port):
             return response.text
         else:
             return "Error: No se pudo obtener el codigo fuente"
+    except Timeout: # Maneja la excepción Timeout
+        return "Error: La conexion se ha agotado (timeout)"
     except:
         return "Error: No se pudo conectar al servicio web"
     
@@ -36,13 +50,18 @@ def get_screenshot(host, port):
     try:
         url = f"http://{host}:{port}"
         driver = webdriver.Firefox()
+        driver.set_page_load_timeout(15)
         driver.get(url)
         # Establecer un temporizador de 5 segundos para la captura de pantalla
-        time.sleep(5)
+        time.sleep(10)
         image_file = f"{folder_img_path}/{host}_{port}.png"
         driver.save_screenshot(image_file)
         driver.quit()
         return image_file
+    except TimeoutException as e:
+        print(f"Timeout al cargar la página en {host}:{port}.")
+        driver.quit()
+        return "Error al tomar la captura de pantalla de la URL."
     except:
         # Si no se puede tomar la captura de pantalla, cerrar el controlador y continuar
         driver.quit()
@@ -122,7 +141,7 @@ with open(json_path, 'w') as jsonfile:
         num_host += 1
         print(f"Escaneando host {num_host}/{len(hosts.keys())}: {host}")
         ports = ','.join(map(str, hosts[host]))
-        scanner.scan(hosts=host, ports=ports, arguments='-A -Pn --script vulners')
+        scanner.scan(hosts=host, ports=ports, arguments='-A -Pn --min-rate 5000 --script vulners')
         if host in scanner.all_hosts():
             # Determinar la subred a la que pertenece la IP
             ip = ipaddress.ip_address(host)
