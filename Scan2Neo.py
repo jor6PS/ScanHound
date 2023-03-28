@@ -5,11 +5,43 @@ import os
 # establecer conexión a la base de datos
 graph = Graph("bolt://localhost:7687", auth=("neo4j", "neo4j1"))
 
+#Busca y mergea todos los ficheros json
+def update_json_files(path):
+    folders = []
+    with os.scandir(path) as entries:
+        for entry in entries:
+            if entry.is_dir():
+                folders.append(entry.name)
+    for directory_path in folders:
+        output = {}
+        for subdir, dirs, files in os.walk(os.path.join(path, directory_path)):
+            for file_name in files:
+                if file_name.endswith('.json'):
+                    with open(os.path.join(subdir, file_name)) as f:
+                        data = json.load(f)
+                        for ip, ip_data in data.items():
+                            if ip not in output:
+                                output[ip] = {}
+                                output[ip]['ports'] = {}
+                                output[ip]['subred'] = ip_data['subred']
+                            for port, port_data in ip_data['ports'].items():
+                                if port not in output[ip]['ports']:
+                                    output[ip]['ports'][port] = {}
+                                for key, value in port_data.items():
+                                    if value == '' or 'Error' in value:
+                                        output[ip]['ports'][port][key] = value
+                                    else:
+                                        output[ip]['ports'][port][key] = value
+        with open(os.path.join(path, directory_path, 'output.json.new'), 'w') as f:
+            json.dump(output, f, indent=4)
+
+update_json_files('results/')
+
 def search_json_files(folder_path):
     json_files = {}
     for root, dirs, files in os.walk(folder_path):
         for file in files:
-            if file.endswith('.json'):
+            if file.endswith('.json.new'):
                 file_path = os.path.join(root, file)
                 folder_name = os.path.dirname(file_path).replace(folder_path, '').lstrip(os.path.sep).split(os.path.sep)[0]
                 json_files[folder_name] = json_files.get(folder_name, []) + [file_path]
@@ -27,8 +59,6 @@ for folder, files in json_files.items():
         graph.create(folder_node)
     
     for file in files:
-        date_str = file.split('_')[0]
-        date_str = date_str.split('/')[2]
         with open(file, 'r') as f:
             data = json.load(f)
 
@@ -66,8 +96,8 @@ for folder, files in json_files.items():
                         
                 # Create or merge the port nodes
                 for port_number, port_data in ip_data["ports"].items():
-                    port_node = Node("Port", number=port_number, date=date_str, **port_data)
-                    existing_port = graph.nodes.match("Port", number=port_number, date=date_str, **port_data).first()
+                    port_node = Node("Port", number=port_number, **port_data)
+                    existing_port = graph.nodes.match("Port", number=port_number, **port_data).first()
                     if existing_port:
                         port_node = existing_port
                     else:
@@ -78,7 +108,7 @@ for folder, files in json_files.items():
                     graph.create(ip_port_rel)
                     
                     # Recorremos los puertos en busca de vulnerabilidades
-                    if ("Error: No se pudieron capturar las vulnerabilidades" not in port_data["Vulners"]) and (port_data["Vulners"] != ""):
+                    if ("Error: No se pudieron capturar las vulnerabilidades" not in port_data["Vulners"]) or (port_data["Vulners"] != ""):
                         vulners = port_data["Vulners"]
                         vulners_node = Node("Vulners", vulns=vulners)
                         existing_vulners = graph.nodes.match("Vulners", vulns=vulners).first()
