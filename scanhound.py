@@ -53,11 +53,12 @@ def get_screenshot(host, port):
         driver.set_page_load_timeout(15)
         driver.get(url)
         # Establecer un temporizador de 5 segundos para la captura de pantalla
-        time.sleep(10)
+        time.sleep(5)
         image_file = f"{folder_img_path}/{host}_{port}.png"
         driver.save_screenshot(image_file)
+        screenshot_binary = driver.get_screenshot_as_png()
         driver.quit()
-        return image_file
+        return base64.b64encode(screenshot_binary).decode('utf-8')
     except TimeoutException as e:
         print(f"Timeout al cargar la página en {host}:{port}.")
         driver.quit()
@@ -141,7 +142,7 @@ with open(json_path, 'w') as jsonfile:
         num_host += 1
         print(f"Escaneando host {num_host}/{len(hosts.keys())}: {host}")
         ports = ','.join(map(str, hosts[host]))
-        scanner.scan(hosts=host, ports=ports, arguments='-A -Pn --min-rate 5000 --script vulners')
+        scanner.scan(hosts=host, ports=ports, arguments='-A -Pn --script vulners')
         if host in scanner.all_hosts():
             # Determinar la subred a la que pertenece la IP
             ip = ipaddress.ip_address(host)
