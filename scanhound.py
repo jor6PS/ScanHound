@@ -1,33 +1,29 @@
 from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support.ui import WebDriverWait
 from requests.exceptions import Timeout
 from selenium import webdriver
 import ipaddress
 import datetime
 import requests
+import argparse
+import base64
 import time
 import json
 import nmap
 import os
 
-# Obtiene la fecha actual en formato año-mes-día
-date_today = datetime.datetime.today().strftime('%Y-%m-%d')
+############################################################# VARIABLES GLOBALES ##############################################################################################################################
 
-# Subredes privadas de la IANA
+#Fecha actual en formato año-mes-día
+date_today = datetime.datetime.today().strftime('%Y-%m-%d')
+# Subredes privadas
 private_subnets = [    
-          ipaddress.ip_network('10.32.0.0/23'),
-          ipaddress.ip_network('10.32.2.0/24'),
-          ipaddress.ip_network('10.32.16.0/23'),
-          ipaddress.ip_network('10.32.18.0/24'),
-          ipaddress.ip_network('10.32.19.0/24'),
-          ipaddress.ip_network('10.32.20.0/23'),
-          ipaddress.ip_network('10.32.22.0/24'),
-          ipaddress.ip_network('10.32.23.0/24'),
-          ipaddress.ip_network('10.32.24.0/24'),
-          ipaddress.ip_network('10.32.25.0/24'),
-          ipaddress.ip_network('10.32.26.0/24'),
-          ipaddress.ip_network('10.32.28.0/23'),
-          ipaddress.ip_network('10.32.30.0/24'),    
-          ipaddress.ip_network('10.32.31.0/24')]
+          ipaddress.ip_network('10.0.0.0/8'),
+          ipaddress.ip_network('172.16.0.0/12'),
+          ipaddress.ip_network('192.168.0.0/16'),
+          ipaddress.ip_network('169.254.0.0/16')]
+
+############################################################# FUNCTIONS ##################################################################################################################################
 
 def get_source(host, port):
     url = f"http://{host}:{port}"
@@ -47,26 +43,24 @@ def get_source(host, port):
     
 # Función para tomar una captura de pantalla de una URL
 def get_screenshot(host, port):
+    url = f"http://{host}:{port}"
+    driver = webdriver.Firefox()
+    driver.set_page_load_timeout(10)
     try:
-        url = f"http://{host}:{port}"
-        driver = webdriver.Firefox()
-        driver.set_page_load_timeout(15)
         driver.get(url)
-        # Establecer un temporizador de 5 segundos para la captura de pantalla
-        time.sleep(5)
+        WebDriverWait(driver, 10).until(lambda driver: driver.execute_script('return document.readyState') == 'complete')
+    except Exception as e:
+        print(f"Error al tomar la captura de pantalla de la URL: {str(url)}")
+        driver.quit()
+        return ""
+    else:
+        time.sleep(1)
         image_file = f"{folder_img_path}/{host}_{port}.png"
         driver.save_screenshot(image_file)
         screenshot_binary = driver.get_screenshot_as_png()
+        print(f"Captura de pantalla guardada en {image_file}")
         driver.quit()
         return base64.b64encode(screenshot_binary).decode('utf-8')
-    except TimeoutException as e:
-        print(f"Timeout al cargar la página en {host}:{port}.")
-        driver.quit()
-        return "Error al tomar la captura de pantalla de la URL."
-    except:
-        # Si no se puede tomar la captura de pantalla, cerrar el controlador y continuar
-        driver.quit()
-        return "Error al tomar la captura de pantalla de la URL."
 
 def get_vulns(host, port, vulns):
     try:
@@ -76,21 +70,38 @@ def get_vulns(host, port, vulns):
         return vulns
     except:
         return "Error: No se pudieron capturar las vulnerabilidades"
-        
-        
-# Pide al usuario que ingrese el nombre de la organización para la creación de directorios
-organizacion = input("Ingresa el nomnbre de la organizacion (Ej. UOC, Google): ")
-folder_path = f"results/{organizacion}"
+
+############################################################# PARAMETROS COMMAND LINE #########################################################################################################################
+
+# Definimos los argumentos que queremos recibir desde la línea de comandos
+parser = argparse.ArgumentParser(description='Ejemplo de escaneo Nmap en Python')
+parser.add_argument('-r', '--rango', type=str, help='IP o rango de IPs a escanear', required=True)
+parser.add_argument('-o', '--org', type=str, help='Organizacion desde donde se lleva a cabo la auditoria', required=True)
+parser.add_argument('-s', '--segmento', type=str, help='Segmento desde el que se ejecuta el escaneo', required=True)
+parser.add_argument('--min-rate', action='store_true', help='Incluir un min-rate de 5000 en el escaneo')
+# Creamos un grupo mutuamente excluyente para -a y --min-rate
+group = parser.add_mutually_exclusive_group(required=True)
+group.add_argument('-a', '--argumentos', type=str, help='Argumentos a pasar a Nmap')
+group.add_argument('--industrial', action='store_true', help='Tipo de escaneo (normal o industrial)')
+# Parseamos los argumentos
+args = parser.parse_args()
+organizacion = args.org
+segmento = args.segmento
+
+############################################################# FOLDER CREATION ##################################################################################################################################
+
+folder_path = f"results/{organizacion}/{segmento}"
 
 if not os.path.exists(folder_path):
     os.makedirs(folder_path)
 
-# Pide al usuario que ingrese el rango de IP a escanear y crea los directorios
-ip_range = input("Ingresa el rango de IP a escanear (Ej. 192.168.1.0/24): ")
-if '/' in ip_range:
-    ip_range_name = ip_range.replace('/', ':')
+#Tratamiento de la ip o rango en caso de que contenga le simbolo /
+if '/' in args.rango:
+    ip_range_name = args.rango.replace('/', ':')
 else:
-    ip_range_name = ip_range
+    ip_range_name = args.rango
+    
+# Creacion de directorios
 scan_path = f"{folder_path}/{date_today}_{ip_range_name}"
 json_path = f"{scan_path}/{ip_range_name}.json"
 folder_img_path = f"{scan_path}/img"
@@ -105,16 +116,25 @@ if not os.path.exists(folder_src_path):
     os.makedirs(folder_src_path)
 if not os.path.exists(folder_vuln_path):
     os.makedirs(folder_vuln_path)
-    
-    
+
+############################################################# FIRST SCAN ##################################################################################################################################
+
 # Crea un objeto de tipo nmap.PortScanner()
 scanner = nmap.PortScanner()
-
 # Comienza el escaneo
 print("Comienza el escaneo!!!")
 
-# Escaneo completo con información detallada
-scanner.scan(hosts=ip_range, arguments='--min-rate 5000 -n -p-')
+# Si se incluyó el parámetro --industrial, escaneamos de la siguietne manera
+if args.industrial:
+    args.argumentos = '-Pn -n --open -p 21,22,23,25,66,79,80,102,107,110,118,119,137,138,139,150,161,194,209,217,389,407,443,445,502,515,522,531,992,993,995,1883,1417-1420,1547,3000,3128,3389,4099,4840,5001-5002,5060,5190,5500,5631,5632,5800,5900,6346,6891-6900,6901,8080,8883,20000-20019,28800'
+
+# Si se incluyó el parámetro --min-rate, agregamos la opción al escaneo
+if args.min_rate:
+    args.argumentos += ' --min-rate 5000'
+
+# Escaneo para sacar los puertos abiertos
+scanner.scan(hosts=args.rango, arguments=args.argumentos)
+
 # Crear una lista para almacenar los puertos abiertos de cada host
 hosts = {}
 # Recorremos los resultados del escaneo
@@ -132,30 +152,34 @@ for host in scanner.all_hosts():
     if open_ports:
         print('Host : %s, Ports : %s' % (host, open_ports))
 
+############################################################# SECOND SCAN ##################################################################################################################################
+
 # Abre el archivo JSON en modo escritura y escribe los resultados
 with open(json_path, 'w') as jsonfile:
-    data = {}
-
+    data = {organizacion: {segmento: {}}}
     # Escaneo de puertos específicos en los hosts obtenidos
     num_host = 0
     for host in hosts:
         num_host += 1
         print(f"Escaneando host {num_host}/{len(hosts.keys())}: {host}")
         ports = ','.join(map(str, hosts[host]))
-        scanner.scan(hosts=host, ports=ports, arguments='-A -Pn --script vulners')
+        if args.industrial:
+            scanner.scan(hosts=host, ports=ports, arguments='-Pn --open')
+        else:
+            scanner.scan(hosts=host, ports=ports, arguments='-A -Pn --script vulners --open')
         if host in scanner.all_hosts():
             # Determinar la subred a la que pertenece la IP
             ip = ipaddress.ip_address(host)
             subnet = None
             for private_subnet in private_subnets:
                 if ip in private_subnet:
-                    subnet = private_subnet
+                    subnet = str(private_subnet)
                     break
+                else:
+                    subnet = "Public ip"
             
             # Crear el diccionario de datos para la IP actual
             host_data = {'ports': {}}
-            if subnet is not None:
-                host_data['subred'] = str(subnet)
             for proto in scanner[host].all_protocols():
                 lport = scanner[host][proto].keys()
                 for port in lport:
@@ -168,9 +192,12 @@ with open(json_path, 'w') as jsonfile:
                         'Version': scanner[host][proto][port]['version'],
                         'Vulners': get_vulns(host, port,scanner[host][proto][port]["script"]["vulners"]) if 'script' in scanner[host]['tcp'][port] and 'vulners' in scanner[host]['tcp'][port]['script'] else "",
                         'Web Source': get_source(host, port) if scanner[host][proto][port]['name'] in ['http', 'https'] else "",
-                        'Screenshot': get_screenshot(host, port) if scanner[host][proto][port]['name'] in ['http', 'https'] else ""
+                        'Screenshot': get_screenshot(host, port) if scanner[host][proto][port]['name'] in ['http', 'https'] else "",
+                        'Date': date_today
                     }
-            data[host] = host_data
+            if subnet not in data[organizacion][segmento]:
+                data[organizacion][segmento][subnet] = {}
+            data[organizacion][segmento][subnet][host] = host_data
 
     # Escribe los datos en formato JSON
     json.dump(data, jsonfile, indent=4)
