@@ -4,13 +4,13 @@
 
 ### ESCANEO
 
-**Simplemente ejecutar el archivo scanhound.py con los parámetros requeridos y seguir las isntrucciones.**
+Simplemente ejecutar el archivo **scanhound.py** con los parámetros requeridos y seguir las isntrucciones.
 
 Esto generará un escaneo y guardará los resultados en una estructura de carpetas y un fichero JSON.
 
 ### IMPORTAR RESULTADO A LA BBDD NEO4J
 
-**Para cargar los resultados en la BBDD Neo4j simplemente ejecutar el script Scan2Neo.py**
+Para cargar los resultados en la BBDD Neo4j simplemente ejecutar el script **Scan2Neo.py**
 
 El resultado en Neo4 por el momento se muestar de la sigueitne manera:
 
