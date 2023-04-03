@@ -57,7 +57,7 @@ for organismo, files in json_files.items():
                         else:
                             graph.create(subred_node)
                         # Create a relationship between the SEG and the Subred node
-                        seg_sub_rel = Relationship(seg_node, "HAS_SUB", subred_node)
+                        seg_sub_rel = Relationship(seg_node, "HAS_VISIBILITY", subred_node)
                         graph.create(seg_sub_rel)
 
                         #Recorremos los nodos (Ips)
@@ -83,7 +83,7 @@ for organismo, files in json_files.items():
                                 else:
                                     graph.create(port_node)
                                 # Creamos una relación entre la dirección IP y el puerto
-                                ip_port_rel = Relationship(ip_node, "HAS_PORT", port_node)
+                                ip_port_rel = Relationship(ip_node, "HAS_PORT", port_node, Date=port_data["Date"])
                                 graph.create(ip_port_rel)
                                 
                                 # Recorremos los puertos en busca de vulnerabilidades
