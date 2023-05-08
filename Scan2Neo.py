@@ -1,9 +1,30 @@
+import argparse
 from py2neo import Graph, Node, Relationship
 import json
 import os
 
-# establecer conexión a la base de datos
-graph = Graph("bolt://localhost:7687", auth=("neo4j", "neo4j1"))
+############################################################# CONEXIÓN BBDD ##############################################################################################################################
+
+
+parser = argparse.ArgumentParser(description='Conectar a la base de datos Neo4j')
+parser.add_argument('-r', '--ip', type=str, help='Dirección IP de la base de datos Neo4j', required=True)
+
+args = parser.parse_args()
+
+# Establecer conexión a la base de datos
+graph = Graph("bolt://" + args.ip + ":7687", auth=("neo4j", "neo4j"))
+
+try:
+    graph.run("MATCH (n) RETURN count(n)")
+except Exception as e:
+    if "Failed to authenticate" in str(e):
+        username = input("Introduzca su nombre de usuario: ")
+        password = input("Introduzca su contraseña: ")
+        graph = Graph("bolt://" + args.ip + ":7687", auth=(username, password))
+    else:
+        raise e
+
+############################################################# BÚSQUEDA ITERATIVA DE JSONs ##############################################################################################################################
 
 #Busca y mergea todos los ficheros json.new creados en cada directorio
 def search_json_files(folder_path):
@@ -17,6 +38,8 @@ def search_json_files(folder_path):
     return json_files
 
 json_files = search_json_files('results/')
+
+############################################################# CREACIÓN DE LA BBDD ##############################################################################################################################
 
 for organismo, files in json_files.items():
     print(f"Creando nodos de {organismo} en la BBDD Neo4j")
