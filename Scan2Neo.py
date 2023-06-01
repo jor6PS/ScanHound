@@ -99,8 +99,8 @@ for organismo, files in json_files.items():
                             #Recorremos los nodos (Port)
                             for port_number, port_data in ip_data["ports"].items():
                                 #Create ports nodes
-                                port_node = Node("Port", number=port_number, **port_data)
-                                existing_port = graph.nodes.match("Port", number=port_number, **port_data).first()
+                                port_node = Node("Port", number=port_number, address=ip, range=subred, seg=seg, org=org, **port_data)
+                                existing_port = graph.nodes.match("Port", number=port_number, address=ip, range=subred, seg=seg, org=org, **port_data).first()
                                 if existing_port:
                                     port_node = existing_port
                                 else:
