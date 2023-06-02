@@ -2,6 +2,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from requests.exceptions import Timeout
 from selenium import webdriver
+import multiprocessing
 import ipaddress
 import datetime
 import requests
@@ -188,6 +189,7 @@ with open(json_path, 'w') as jsonfile:
             for proto in scanner[host].all_protocols():
                 lport = scanner[host][proto].keys()
                 for port in lport:
+                    process = multiprocessing.Process(target=get_screenshot, args=(host, port))
                     host_data['ports'][port] = {
                         'Hostname': scanner[host].hostname(),
                         'Protocol': proto,
@@ -197,7 +199,7 @@ with open(json_path, 'w') as jsonfile:
                         'Version': scanner[host][proto][port]['version'],
                         'Vulners': get_vulns(host, port,scanner[host][proto][port]["script"]["vulners"]) if 'script' in scanner[host]['tcp'][port] and 'vulners' in scanner[host]['tcp'][port]['script'] else "",
                         'Web Source': get_source(host, port) if scanner[host][proto][port]['name'] in ['http', 'https'] else "",
-                        'Screenshot': get_screenshot(host, port) if scanner[host][proto][port]['name'] in ['http', 'https'] else "",
+                        'Screenshot': process.start() if scanner[host][proto][port]['name'] in ['http', 'https'] else "",
                         'Date': date_today
                     }
             if subnet not in data[organizacion][segmento]:
