@@ -1,8 +1,9 @@
+from selenium.webdriver.firefox.options import Options
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from requests.exceptions import Timeout
 from selenium import webdriver
-import multiprocessing
+import threading
 import ipaddress
 import datetime
 import requests
@@ -45,7 +46,11 @@ def get_source(host, port):
 # Función para tomar una captura de pantalla de una URL
 def get_screenshot(host, port):
     url = f"http://{host}:{port}"
-    driver = webdriver.Firefox()
+    # Configurar las opciones del navegador en modo headless
+    options = Options()
+    options.add_argument("--headless")
+    # Crear una instancia del navegador con las opciones configuradas
+    driver = webdriver.Firefox(options=options)
     driver.set_page_load_timeout(10)
     try:
         driver.get(url)
@@ -189,7 +194,7 @@ with open(json_path, 'w') as jsonfile:
             for proto in scanner[host].all_protocols():
                 lport = scanner[host][proto].keys()
                 for port in lport:
-                    process = multiprocessing.Process(target=get_screenshot, args=(host, port))
+                    thread = threading.Thread(target=get_screenshot, args=(host, port))
                     host_data['ports'][port] = {
                         'Hostname': scanner[host].hostname(),
                         'Protocol': proto,
@@ -199,7 +204,7 @@ with open(json_path, 'w') as jsonfile:
                         'Version': scanner[host][proto][port]['version'],
                         'Vulners': get_vulns(host, port,scanner[host][proto][port]["script"]["vulners"]) if 'script' in scanner[host]['tcp'][port] and 'vulners' in scanner[host]['tcp'][port]['script'] else "",
                         'Web Source': get_source(host, port) if scanner[host][proto][port]['name'] in ['http', 'https'] else "",
-                        'Screenshot': process.start() if scanner[host][proto][port]['name'] in ['http', 'https'] else "",
+                        'Screenshot': thread.start() if scanner[host][proto][port]['name'] in ['http', 'https'] else "",
                         'Date': date_today
                     }
             if subnet not in data[organizacion][segmento]:
