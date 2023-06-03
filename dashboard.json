@@ -1,0 +1,396 @@
+{
+  "title": "TEST",
+  "version": "2.2",
+  "settings": {
+    "pagenumber": 0,
+    "editable": true,
+    "fullscreenEnabled": false,
+    "parameters": {
+      "neodash_number": "80",
+      "neodash_port_number": "22",
+      "neodash_port_number_display": "22",
+      "neodash_port": "",
+      "undefined": "",
+      "undefined_display": "",
+      "neodash_folder_name": "Nortegas_M2M_Telecontrol",
+      "neodash_folder_name_display": "Nortegas_M2M_Telecontrol",
+      "neodash_org_org": "casa",
+      "neodash_org_org_display": "casa",
+      "neodash_ip_address": "59.127.0.3",
+      "neodash_ip_address_display": "59.127.0.3"
+    }
+  },
+  "pages": [
+    {
+      "title": "Main Page",
+      "reports": [
+        {
+          "title": "GRAFO DINÁMICO",
+          "query": "MATCH t=((o:ORG)-[*]->(n2))\nRETURN t\nLIMIT 300",
+          "width": 10,
+          "height": 4,
+          "x": 2,
+          "y": 0,
+          "type": "graph",
+          "selection": {
+            "ORG": "org",
+            "SEG": "seg",
+            "Subred": "range",
+            "IP": "address",
+            "Port": "number",
+            "Web Source": "(label)",
+            "Screenshot": "(label)",
+            "Vulners": "(label)"
+          },
+          "settings": {
+            "relationshipParticles": false,
+            "downloadImageEnabled": true
+          }
+        },
+        {
+          "title": "TOP 20 puertos más utilizados",
+          "query": "MATCH (n:Port)\nWITH n.number AS atributo, count(*) AS cantidad\nRETURN atributo, cantidad\nORDER BY cantidad DESC\nLIMIT 20\n\n\n",
+          "width": 12,
+          "height": 2,
+          "x": 0,
+          "y": 4,
+          "type": "bar",
+          "selection": {
+            "index": "atributo",
+            "value": "cantidad",
+            "key": "(none)"
+          },
+          "settings": {}
+        },
+        {
+          "title": "TOP 20 puertos industriales más utilizados",
+          "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port)\nWHERE p.number IN ['102','104','1089','1090','1091','1541','1883','8883','3480','4000','502','5052','5065','5450','5800','5900','9600','10307','10311','10364','10365','10407','10409','10410','10412','10414','10415','10428','10431','10432','10447','10449','10450','11001','12135','12136','12137','12316','12645','12647','12648','13722','13724','13782','13783','1541','18000','1911','1962','20000','34962','34963','34964','38589','38593','38600','38971','39129','39278','44818','45678','50001','50002','50003','50004','50005','50006','50007','50008','50009','50010','50011','50012','50013','50014','50015','50016','50018','50019','50020','50025','50026','50027','50028','50110','50111','55555','56001','56002','56003','56004','56005','56006','56007','56008','56009','56010','56011','56012','56013','56014','56015','56016','56017','56018','56019','56020','56021','56022','56023','56024','56025','56026','56027','56028','56029','56030','56031','56032','56033','56034','56035','56036','56037','56038','56039','56040','56041','56042','56043','56044','56045','56046','56047','56048','56049','56050','56051','56052','56053','56054','56055','56056','56057','56058','56059','56060','56061','56062','56063','56064','56065','56066','56067','56068','56069','56070','56071','56072','56073','56074','56075','56076','56077','56078','56079','56080','56081','56082','56083','56084','56085','56086','56087','56088','56089','56090','56091','56092','56093','56094','56095','56096','56097','56098','56099','62900','62911','62924','62930','62938','62956','62957','62963','62981','62982','62985','62992','63012','63027','63028','63029','63030','63031','63032','63033','63034','63035','63036','63041','63075','63079','63082','63088','63094','65443']\nWITH p.number AS atributo, count(*) AS cantidad\nRETURN atributo, cantidad\nORDER BY cantidad DESC\nLIMIT 20\n\n\n",
+          "width": 12,
+          "height": 2,
+          "x": 0,
+          "y": 6,
+          "type": "bar",
+          "selection": {
+            "index": "atributo",
+            "value": "cantidad",
+            "key": "(none)"
+          },
+          "settings": {}
+        },
+        {
+          "title": "Nº ORGANIZACIONES",
+          "query": "MATCH (n:ORG)\nRETURN COUNT(DISTINCT n)",
+          "width": 2,
+          "height": 1,
+          "x": 0,
+          "y": 0,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "ACTIVOS/ORG",
+          "query": "MATCH t=((o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port))\nRETURN o.org AS Organización, COUNT(ip.address) AS Activos\n\n\n",
+          "width": 2,
+          "height": 3,
+          "x": 0,
+          "y": 1,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        }
+      ]
+    },
+    {
+      "title": "ORGANIZACIÓN",
+      "reports": [
+        {
+          "title": "ORGANIZACIÓN",
+          "query": "MATCH (n:`ORG`) \nWHERE toLower(toString(n.`org`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`org` as value,  n.`org` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 0,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "ORG",
+            "propertyType": "org",
+            "propertyTypeDisplay": "org",
+            "parameterName": "neodash_org_org",
+            "backgroundColor": "rgba(123, 216, 123, 0.2)"
+          }
+        },
+        {
+          "title": "PROTOCOLOS",
+          "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port)\nWHERE o.org = $neodash_org_org \nRETURN COUNT(DISTINCT p.number)",
+          "width": 2,
+          "height": 1,
+          "x": 10,
+          "y": 1,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "ACTIVOS",
+          "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)\nWHERE o.org = $neodash_org_org \nRETURN COUNT(ip)",
+          "width": 2,
+          "height": 1,
+          "x": 0,
+          "y": 1,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "VULNERS",
+          "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port)-[:HAS_VULNS]->(vulns:Vulners)\nWHERE o.org = $neodash_org_org \nRETURN COUNT(vulns)\n\n",
+          "width": 2,
+          "height": 1,
+          "x": 8,
+          "y": 1,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "CAPTURAS",
+          "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port)-[:HAS_SCREENSHOT]-(scr:Screenshot)\nWHERE o.org = $neodash_org_org \nRETURN COUNT(scr)\n\n",
+          "width": 2,
+          "height": 1,
+          "x": 4,
+          "y": 1,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "ACTIVOS REPETIDOS",
+          "query": "???\n",
+          "width": 9,
+          "height": 1,
+          "x": 3,
+          "y": 2,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "GRAFO DE TODA LA ORGANIACIÓN",
+          "query": "MATCH t=((o:ORG)-[*]->(n2))\nWHERE o.org = $neodash_org_org \nRETURN t",
+          "width": 12,
+          "height": 3,
+          "x": 0,
+          "y": 3,
+          "type": "graph",
+          "selection": {
+            "ORG": "org",
+            "SEG": "seg",
+            "Subred": "range",
+            "IP": "address",
+            "Port": "number",
+            "Web Source": "(label)",
+            "Screenshot": "(label)",
+            "Vulners": "(label)"
+          },
+          "settings": {}
+        },
+        {
+          "title": "GRAFO DINAMICO",
+          "query": "MATCH t=((o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port))\nWHERE ($neodash_port_number IS NULL OR p.number = $neodash_port_number)\n  AND ($neodash_ip_address IS NULL OR ip.address = $neodash_ip_address)\n  AND o.org = $neodash_org_org\nRETURN t\n",
+          "width": 10,
+          "height": 4,
+          "x": 2,
+          "y": 10,
+          "type": "graph",
+          "selection": {
+            "ORG": "org",
+            "SEG": "seg",
+            "Subred": "range",
+            "IP": "address",
+            "Port": "number"
+          },
+          "settings": {}
+        },
+        {
+          "title": "PUERTO",
+          "query": "MATCH (n:`Port`) \nWHERE toLower(toString(n.`number`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`number` as value,  n.`number` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 2,
+          "height": 1,
+          "x": 0,
+          "y": 10,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "Port",
+            "propertyType": "number",
+            "propertyTypeDisplay": "number",
+            "parameterName": "neodash_port_number"
+          }
+        },
+        {
+          "title": "Puertos utilizados",
+          "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port)\nWHERE o.org = $neodash_org_org \nWITH p.number AS atributo, count(*) AS cantidad\nRETURN atributo, cantidad\nORDER BY cantidad DESC\nLIMIT 20\n\n\n",
+          "width": 12,
+          "height": 2,
+          "x": 0,
+          "y": 6,
+          "type": "bar",
+          "selection": {
+            "index": "atributo",
+            "value": "cantidad",
+            "key": "(none)"
+          },
+          "settings": {}
+        },
+        {
+          "title": "TABLA",
+          "query": "MATCH t=((o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port))\nWHERE o.org = $neodash_org_org\nRETURN p.number AS Servicios, COUNT(ip.address) AS Activos\n",
+          "width": 2,
+          "height": 2,
+          "x": 0,
+          "y": 12,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "GRAFO VULNERABILIDADES",
+          "query": "MATCH t=((o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port)-[:HAS_VULNS]->(v:Vulners))\nWHERE o.org = $neodash_org_org\nRETURN t\n\n\n",
+          "width": 12,
+          "height": 4,
+          "x": 0,
+          "y": 14,
+          "type": "graph",
+          "selection": {
+            "ORG": "org",
+            "SEG": "seg",
+            "Subred": "range",
+            "IP": "address",
+            "Port": "number",
+            "Vulners": "(label)"
+          },
+          "settings": {}
+        },
+        {
+          "title": "IPS VISIBLES DESDE MÚLTIPLES SEGMENTOS (PIVOTE)",
+          "query": "MATCH t=((ip1:IP)<-[:HAS_IP]-(sub1:Subred)<-[:HAS_VISIBILITY]-(seg1:SEG)<-[:HAS_SEG]-(o:ORG)-[:HAS_SEG]->(seg2:SEG)-[:HAS_VISIBILITY]->(sub2:Subred)-[:HAS_IP]->(ip2:IP))\nWHERE (ip1.address = ip2.address) and (o.org = $neodash_org_org)\nRETURN t\n\n\n",
+          "width": 12,
+          "height": 4,
+          "x": 0,
+          "y": 18,
+          "type": "graph",
+          "selection": {
+            "IP": "address",
+            "Subred": "range",
+            "SEG": "seg",
+            "ORG": "org"
+          },
+          "settings": {}
+        },
+        {
+          "title": "Puertos industriales utilizados",
+          "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port)\nWHERE (o.org = $neodash_org_org)  and (p.number IN ['102','104','1089','1090','1091','1541','1883','8883','3480','4000','502','5052','5065','5450','5800','5900','9600','10307','10311','10364','10365','10407','10409','10410','10412','10414','10415','10428','10431','10432','10447','10449','10450','11001','12135','12136','12137','12316','12645','12647','12648','13722','13724','13782','13783','1541','18000','1911','1962','20000','34962','34963','34964','38589','38593','38600','38971','39129','39278','44818','45678','50001','50002','50003','50004','50005','50006','50007','50008','50009','50010','50011','50012','50013','50014','50015','50016','50018','50019','50020','50025','50026','50027','50028','50110','50111','55555','56001','56002','56003','56004','56005','56006','56007','56008','56009','56010','56011','56012','56013','56014','56015','56016','56017','56018','56019','56020','56021','56022','56023','56024','56025','56026','56027','56028','56029','56030','56031','56032','56033','56034','56035','56036','56037','56038','56039','56040','56041','56042','56043','56044','56045','56046','56047','56048','56049','56050','56051','56052','56053','56054','56055','56056','56057','56058','56059','56060','56061','56062','56063','56064','56065','56066','56067','56068','56069','56070','56071','56072','56073','56074','56075','56076','56077','56078','56079','56080','56081','56082','56083','56084','56085','56086','56087','56088','56089','56090','56091','56092','56093','56094','56095','56096','56097','56098','56099','62900','62911','62924','62930','62938','62956','62957','62963','62981','62982','62985','62992','63012','63027','63028','63029','63030','63031','63032','63033','63034','63035','63036','63041','63075','63079','63082','63088','63094','65443'])\nWITH p.number AS atributo, count(*) AS cantidad\nRETURN atributo, cantidad\nORDER BY cantidad DESC\nLIMIT 20\n",
+          "width": 12,
+          "height": 2,
+          "x": 0,
+          "y": 8,
+          "type": "bar",
+          "selection": {
+            "index": "atributo",
+            "value": "cantidad",
+            "key": "(none)"
+          },
+          "settings": {}
+        },
+        {
+          "title": "GRAFO CON PROTOCOLS INSEGUROS (SIN CIFRADO)",
+          "query": "MATCH t=((o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port))\nWHERE o.org = $neodash_org_org and (p.number IN ['20','21','23','80','8080'])\nRETURN t",
+          "width": 10,
+          "height": 4,
+          "x": 0,
+          "y": 22,
+          "type": "graph",
+          "selection": {
+            "ORG": "org",
+            "SEG": "seg",
+            "Subred": "range",
+            "IP": "address",
+            "Port": "number"
+          },
+          "settings": {}
+        },
+        {
+          "title": "SERVICIOS",
+          "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port)\nWHERE o.org = $neodash_org_org \nRETURN COUNT(p.number)",
+          "width": 2,
+          "height": 1,
+          "x": 2,
+          "y": 1,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "WEB SOURCE",
+          "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port)-[:HAS_WEBSOURCE]->(web:`Web Source`)\nWHERE o.org = $neodash_org_org \nRETURN COUNT(web)\n\n",
+          "width": 2,
+          "height": 1,
+          "x": 6,
+          "y": 1,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "PUERTOS INSEGUROS",
+          "query": "MATCH t=((o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port))\nWHERE o.org = $neodash_org_org AND (p.number IN ['20','21','23','80','8080'])\nWITH ip, p\nORDER BY p.number ASC\nRETURN p.number AS Puertos, (ip.address) AS Activos\n",
+          "width": 2,
+          "height": 4,
+          "x": 10,
+          "y": 22,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        },
+        {
+          "title": "ACTIVO",
+          "query": "MATCH (n:`IP`) \nWHERE toLower(toString(n.`address`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`address` as value,  n.`address` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 2,
+          "height": 1,
+          "x": 0,
+          "y": 11,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "IP",
+            "propertyType": "address",
+            "propertyTypeDisplay": "address",
+            "parameterName": "neodash_ip_address"
+          }
+        },
+        {
+          "title": "ACTIVOS INDUSTRIALES",
+          "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port)\nWHERE (o.org = $neodash_org_org)  and (p.number IN ['102','104','1089','1090','1091','1541','1883','8883','3480','4000','502','5052','5065','5450','5800','5900','9600','10307','10311','10364','10365','10407','10409','10410','10412','10414','10415','10428','10431','10432','10447','10449','10450','11001','12135','12136','12137','12316','12645','12647','12648','13722','13724','13782','13783','1541','18000','1911','1962','20000','34962','34963','34964','38589','38593','38600','38971','39129','39278','44818','45678','50001','50002','50003','50004','50005','50006','50007','50008','50009','50010','50011','50012','50013','50014','50015','50016','50018','50019','50020','50025','50026','50027','50028','50110','50111','55555','56001','56002','56003','56004','56005','56006','56007','56008','56009','56010','56011','56012','56013','56014','56015','56016','56017','56018','56019','56020','56021','56022','56023','56024','56025','56026','56027','56028','56029','56030','56031','56032','56033','56034','56035','56036','56037','56038','56039','56040','56041','56042','56043','56044','56045','56046','56047','56048','56049','56050','56051','56052','56053','56054','56055','56056','56057','56058','56059','56060','56061','56062','56063','56064','56065','56066','56067','56068','56069','56070','56071','56072','56073','56074','56075','56076','56077','56078','56079','56080','56081','56082','56083','56084','56085','56086','56087','56088','56089','56090','56091','56092','56093','56094','56095','56096','56097','56098','56099','62900','62911','62924','62930','62938','62956','62957','62963','62981','62982','62985','62992','63012','63027','63028','63029','63030','63031','63032','63033','63034','63035','63036','63041','63075','63079','63082','63088','63094','65443'])\nRETURN COUNT(ip)",
+          "width": 3,
+          "height": 1,
+          "x": 0,
+          "y": 2,
+          "type": "value",
+          "selection": {},
+          "settings": {}
+        }
+      ]
+    }
+  ],
+  "parameters": {},
+  "extensions": {
+    "advanced-charts": true,
+    "styling": true,
+    "actions": true
+  }
+}
