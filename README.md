@@ -24,7 +24,13 @@ Para instalar las dependencias, estos son los únicos pasos
 
 ## TODO
 
-- Gestionar la carga de los ficheros de vulnerabilidades, código fuente y capturas de pantalla en la BBDD Neo4j.
+- Para el dashboard de los activos pivote comprobar el ip.address y el p.hostname y quitar el nodo origen para obtener un grafo asi:  [Seg1]->(ip)<-[Seg2]
+- Meter tambien la cuenta del nº total de activos inseguros (con protocolos inseguros)
+- Hacer un filtro por ip para el grafo de activos similares en base a las capturas de pantall. De esta manera mostrar solo los equipos iguales a este activo especificado
+- Mostrar toda la cantidad de subredes /24 encontradas
+- Incluir un departamento nuevo para el control de activos y servicios entre escaneos con fechas diferentes
+
+- Escala logarítmica para el gráfico coparativos entre organiaciones, Para los valores, sacar porcentaje del total de activos por cada organización
 
 ## QUERIES
 
