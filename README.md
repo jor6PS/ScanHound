@@ -24,6 +24,8 @@ Para instalar las dependencias, estos son los únicos pasos
 
 ## TODO
 
+- Levantar el NeoDash automáticoametne con la ejecución del Scan2Neo.py y cerrarlo al cerrarlo (Ctrl+C)
+
 - Para el dashboard de los activos pivote comprobar el ip.address y el p.hostname y quitar el nodo origen para obtener un grafo asi:  [Seg1]->(ip)<-[Seg2]
 - Meter tambien la cuenta del nº total de activos inseguros (con protocolos inseguros)
 - Hacer un filtro por ip para el grafo de activos similares en base a las capturas de pantall. De esta manera mostrar solo los equipos iguales a este activo especificado
