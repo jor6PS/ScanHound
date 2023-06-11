@@ -27,16 +27,15 @@ Para instalar las dependencias, estos son los únicos pasos
 - Modificar el primer escaneo para que haga un barrido por ping como la herramienta ICMP-SCAN. Incluirlo directamente en el json y el siguiente escaneo de servicios que comolemente la información
 - Guardar la información del escaneo ping en csv para cada uno de los escaneos
 - incluir el modo --idustrial-hardcore para que unicamente realice el primer escaneo icmp sin escanear servicios
-
+---------
 - Levantar el NeoDash y el Neo4j automáticamente con la ejecución del Scan2Neo.py y cerrarlo al (Ctrl+C)
 - Cambiar en scan2neo la detección de subredes para que obtenga los /24 de cada una de las ips detectadas en vez de especificar los rangos a mano. si es una ip publica, generar un nodo que sea "ips publica"
-
+---------
 - Para el dashboard de los activos pivote comprobar el ip.address y el p.hostname y quitar el nodo origen para obtener un grafo asi:  [Seg1]->(ip)<-[Seg2]
 - Meter tambien la cuenta del nº total de activos inseguros (con protocolos inseguros)
 - Hacer un filtro por ip para el grafo de activos similares en base a las capturas de pantall. De esta manera mostrar solo los equipos iguales a este activo especificado
 - Mostrar toda la cantidad de subredes /24 encontradas
 - Incluir un departamento nuevo para el control de cambios de activos y servicios entre escaneos con fechas diferentes
-
 - Escala logarítmica para el gráfico coparativos entre organiaciones, Para los valores, sacar porcentaje del total de activos por cada organización
 
 ## QUERIES
