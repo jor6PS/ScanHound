@@ -28,7 +28,6 @@ Para instalar las dependencias, estos son los únicos pasos
 - Guardar la información del escaneo ping en csv para cada uno de los escaneos
 - incluir el modo --idustrial-hardcore para que unicamente realice el primer escaneo icmp sin escanear servicios
 ---------
-- Levantar el NeoDash y el Neo4j automáticamente con la ejecución del Scan2Neo.py y cerrarlo al (Ctrl+C)
 - Cambiar en scan2neo la detección de subredes para que obtenga los /24 de cada una de las ips detectadas en vez de especificar los rangos a mano. si es una ip publica, generar un nodo que sea "ips publica"
 ---------
 - Para el dashboard de los activos pivote comprobar el ip.address y el p.hostname y quitar el nodo origen para obtener un grafo asi:  [Seg1]->(ip)<-[Seg2] - DELAYED
