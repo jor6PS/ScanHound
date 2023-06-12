@@ -36,7 +36,8 @@ Para instalar las dependencias, estos son los únicos pasos
 - Mostrar toda la cantidad de subredes /24 encontradas - DONE
 - Incluir un departamento nuevo para el control de cambios de activos y servicios entre escaneos con fechas diferentes - HALF DONE
 - Escala logarítmica para el gráfico coparativos entre organiaciones, Para los valores, sacar porcentaje del total de activos por cada organización - HALF DONE
-
+---------
+- Actualizar el README 
 ## QUERIES
 
 MATCH x=(o:ORG)-[:HAS_SEG]->(s:SEG)-[:HAS_SUBNET]->(sb:Subnet)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port)
