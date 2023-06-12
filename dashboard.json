@@ -17,7 +17,9 @@
       "neodash_org_org": "",
       "neodash_org_org_display": "",
       "neodash_ip_address": "",
-      "neodash_ip_address_display": ""
+      "neodash_ip_address_display": "",
+      "neodash_port_date": "",
+      "neodash_port_date_display": ""
     }
   },
   "pages": [
@@ -358,7 +360,7 @@
           "width": 10,
           "height": 3,
           "x": 2,
-          "y": 21,
+          "y": 19,
           "type": "graph",
           "selection": {
             "ORG": "org",
@@ -378,7 +380,7 @@
           "width": 2,
           "height": 3,
           "x": 0,
-          "y": 21,
+          "y": 19,
           "type": "select",
           "selection": {},
           "settings": {
@@ -426,7 +428,7 @@
           "width": 9,
           "height": 4,
           "x": 0,
-          "y": 33,
+          "y": 31,
           "type": "graph",
           "selection": {
             "ORG": "org",
@@ -446,7 +448,7 @@
           "width": 12,
           "height": 3,
           "x": 0,
-          "y": 37,
+          "y": 35,
           "type": "graph",
           "selection": {
             "IP": "address",
@@ -482,7 +484,7 @@
           "width": 9,
           "height": 4,
           "x": 0,
-          "y": 29,
+          "y": 27,
           "type": "graph",
           "selection": {
             "ORG": "org",
@@ -527,7 +529,7 @@
           "width": 3,
           "height": 8,
           "x": 9,
-          "y": 29,
+          "y": 27,
           "type": "table",
           "selection": {},
           "settings": {
@@ -540,7 +542,7 @@
           "width": 2,
           "height": 4,
           "x": 0,
-          "y": 24,
+          "y": 22,
           "type": "select",
           "selection": {},
           "settings": {
@@ -571,7 +573,7 @@
           "width": 10,
           "height": 4,
           "x": 2,
-          "y": 24,
+          "y": 22,
           "type": "graph",
           "selection": {
             "ORG": "org",
@@ -604,15 +606,15 @@
         },
         {
           "title": "",
-          "query": "# BÚSQUEDA DINÁMICA\n",
+          "query": "# CONTROL DE CAMBIOS\n",
           "width": 12,
           "height": 1,
           "x": 0,
-          "y": 17,
+          "y": 38,
           "type": "text",
           "selection": {},
           "settings": {
-            "backgroundColor": "#3498DB"
+            "backgroundColor": "#f7dc6f"
           }
         },
         {
@@ -621,7 +623,7 @@
           "width": 12,
           "height": 1,
           "x": 0,
-          "y": 28,
+          "y": 26,
           "type": "text",
           "selection": {},
           "settings": {
@@ -660,7 +662,7 @@
           "width": 12,
           "height": 3,
           "x": 0,
-          "y": 18,
+          "y": 16,
           "type": "table",
           "selection": {},
           "settings": {
@@ -713,6 +715,55 @@
           "selection": {},
           "settings": {
             "backgroundColor": "#D2B4DE"
+          }
+        },
+        {
+          "title": "",
+          "query": "# BÚSQUEDA DINÁMICA\n",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 15,
+          "type": "text",
+          "selection": {},
+          "settings": {
+            "backgroundColor": "#3498DB"
+          }
+        },
+        {
+          "title": "Cambios posteriores a esta fecha",
+          "query": "MATCH (n:`Port`) \nWHERE toLower(toString(n.`Date`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`Date` as value,  n.`Date` as display ORDER BY size(toString(value)) ASC LIMIT 5",
+          "width": 9,
+          "height": 1,
+          "x": 3,
+          "y": 39,
+          "type": "select",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "Port",
+            "propertyType": "Date",
+            "propertyTypeDisplay": "Date",
+            "parameterName": "neodash_port_date",
+            "backgroundColor": " #fcf3cf"
+          }
+        },
+        {
+          "title": "Fechas durante el escaneo",
+          "query": "MATCH t=((o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port))\nWHERE o.org = $neodash_org_org\nRETURN DISTINCT p.Date AS Fechas",
+          "width": 3,
+          "height": 2,
+          "x": 0,
+          "y": 39,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "type": "Node Property",
+            "entityType": "Port",
+            "propertyType": "Date",
+            "propertyTypeDisplay": "Date",
+            "parameterName": "neodash_port_date",
+            "backgroundColor": " #fcf3cf"
           }
         }
       ]
