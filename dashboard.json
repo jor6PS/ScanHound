@@ -32,7 +32,7 @@
           "width": 10,
           "height": 4,
           "x": 2,
-          "y": 0,
+          "y": 3,
           "type": "graph",
           "selection": {
             "ORG": "org",
@@ -42,7 +42,7 @@
           "settings": {
             "relationshipParticles": false,
             "downloadImageEnabled": true,
-            "backgroundColor": "#EDE7F6",
+            "backgroundColor": "#ebdef0",
             "nodeColorScheme": "accent"
           }
         },
@@ -60,7 +60,7 @@
             "key": "(none)"
           },
           "settings": {
-            "backgroundColor": "#B2EBF2"
+            "backgroundColor": "#ebdef0"
           }
         },
         {
@@ -77,33 +77,33 @@
             "key": "(none)"
           },
           "settings": {
-            "backgroundColor": "#B2DFDB"
+            "backgroundColor": "#ebdef0"
           }
         },
         {
           "title": "Nº ORGANIZACIONES",
           "query": "MATCH (n:ORG)\nRETURN COUNT(DISTINCT n)",
           "width": 2,
-          "height": 1,
-          "x": 0,
+          "height": 2,
+          "x": 10,
           "y": 0,
           "type": "value",
           "selection": {},
           "settings": {
-            "backgroundColor": "#E1BEE7 "
+            "backgroundColor": " #d4e6f1"
           }
         },
         {
           "title": "ACTIVOS/ORG",
           "query": "MATCH t=((o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP))\nRETURN o.org AS Organización, COUNT(DISTINCT ip.address) AS Activos\n\n\n",
           "width": 2,
-          "height": 3,
+          "height": 4,
           "x": 0,
-          "y": 1,
+          "y": 3,
           "type": "table",
           "selection": {},
           "settings": {
-            "backgroundColor": "#C5CAE9"
+            "backgroundColor": "#ebdef0"
           }
         },
         {
@@ -112,11 +112,11 @@
           "width": 4,
           "height": 2,
           "x": 0,
-          "y": 11,
+          "y": 16,
           "type": "table",
           "selection": {},
           "settings": {
-            "backgroundColor": "#DCEDC8"
+            "backgroundColor": " #fae5d3"
           }
         },
         {
@@ -125,11 +125,11 @@
           "width": 4,
           "height": 2,
           "x": 4,
-          "y": 11,
+          "y": 16,
           "type": "table",
           "selection": {},
           "settings": {
-            "backgroundColor": "#FFF9C4 "
+            "backgroundColor": " #fae5d3"
           }
         },
         {
@@ -138,11 +138,11 @@
           "width": 4,
           "height": 2,
           "x": 8,
-          "y": 11,
+          "y": 16,
           "type": "table",
           "selection": {},
           "settings": {
-            "backgroundColor": "#FFE0B2"
+            "backgroundColor": " #fae5d3"
           }
         },
         {
@@ -151,14 +151,16 @@
           "width": 6,
           "height": 2,
           "x": 0,
-          "y": 13,
+          "y": 18,
           "type": "bar",
           "selection": {
             "index": "ORGANIZACIÓN",
             "value": "ACTIVOS_ÚNICOS",
             "key": "(none)"
           },
-          "settings": {}
+          "settings": {
+            "backgroundColor": " #fae5d3"
+          }
         },
         {
           "title": "FILTRO DINÁMICO DE BÚSQUEDA (LIMITADO)",
@@ -166,11 +168,11 @@
           "width": 12,
           "height": 3,
           "x": 0,
-          "y": 4,
+          "y": 12,
           "type": "table",
           "selection": {},
           "settings": {
-            "backgroundColor": "#BBDEFB"
+            "backgroundColor": " #d1f2eb "
           }
         },
         {
@@ -179,14 +181,16 @@
           "width": 6,
           "height": 2,
           "x": 6,
-          "y": 13,
+          "y": 18,
           "type": "bar",
           "selection": {
             "index": "ORGANIZACIÓN",
             "value": "CAPTURAS",
             "key": "(none)"
           },
-          "settings": {}
+          "settings": {
+            "backgroundColor": " #fae5d3"
+          }
         },
         {
           "title": "INDICADORES CÓDIGOS FUENTE/ORGANIZACIÓN",
@@ -194,14 +198,16 @@
           "width": 6,
           "height": 2,
           "x": 0,
-          "y": 15,
+          "y": 20,
           "type": "bar",
           "selection": {
             "index": "ORGANIZACIÓN",
             "value": "CÓDIGOS_FUENTE",
             "key": "(none)"
           },
-          "settings": {}
+          "settings": {
+            "backgroundColor": " #fae5d3"
+          }
         },
         {
           "title": "INDICADORES VULNERABILIDADES/ORGANIZACIÓN",
@@ -209,14 +215,16 @@
           "width": 6,
           "height": 2,
           "x": 6,
-          "y": 15,
+          "y": 20,
           "type": "bar",
           "selection": {
             "index": "ORGANIZACIÓN",
             "value": "VULNERABILIDADES",
             "key": "(none)"
           },
-          "settings": {}
+          "settings": {
+            "backgroundColor": " #fae5d3"
+          }
         },
         {
           "title": "INDICADORES ACTIVOS INDUSTRIALES/ORGANIZACIÓN",
@@ -224,14 +232,16 @@
           "width": 6,
           "height": 2,
           "x": 0,
-          "y": 17,
+          "y": 22,
           "type": "bar",
           "selection": {
             "index": "ORGANIZACIÓN",
             "value": "ACTIVOS_INDUSTRIALES",
             "key": "(none)"
           },
-          "settings": {}
+          "settings": {
+            "backgroundColor": " #fae5d3"
+          }
         },
         {
           "title": "INDICADORES PROTOCOLOS/ORGANIZACIÓN",
@@ -239,14 +249,68 @@
           "width": 6,
           "height": 2,
           "x": 6,
-          "y": 17,
+          "y": 22,
           "type": "bar",
           "selection": {
             "index": "ORGANIZACIÓN",
             "value": "PROTOCOLOS_DISTINTOS",
             "key": "(none)"
           },
-          "settings": {}
+          "settings": {
+            "backgroundColor": " #fae5d3"
+          }
+        },
+        {
+          "title": "",
+          "query": "## INDICADORES POR ORGANIZACIÓN\n",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 15,
+          "type": "text",
+          "selection": {},
+          "settings": {
+            "backgroundColor": " #e67e22 "
+          }
+        },
+        {
+          "title": "",
+          "query": "## BÚSQUEDA DINÁMICA\n\n\n",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 11,
+          "type": "text",
+          "selection": {},
+          "settings": {
+            "backgroundColor": "#48C9B0"
+          }
+        },
+        {
+          "title": "",
+          "query": "# INFORMACIÓN GLOBAL DE TODOS LOS ESCANEOS EJECUTADOS \n\n## Índice\n\n- Elementos informativos\n- Búsqueda dinámica\n- Indicadores\n\n",
+          "width": 10,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "text",
+          "selection": {},
+          "settings": {
+            "backgroundColor": " #5dade2 "
+          }
+        },
+        {
+          "title": "",
+          "query": "## ELEMENTOS INFORMATIVOS\n\n",
+          "width": 12,
+          "height": 1,
+          "x": 0,
+          "y": 2,
+          "type": "text",
+          "selection": {},
+          "settings": {
+            "backgroundColor": "#A569BD "
+          }
         }
       ]
     },
@@ -257,7 +321,7 @@
           "title": "ORGANIZACIÓN",
           "query": "MATCH (n:`ORG`) \nWHERE toLower(toString(n.`org`)) CONTAINS toLower($input) \nRETURN DISTINCT n.`org` as value,  n.`org` as display ORDER BY size(toString(value)) ASC LIMIT 5",
           "width": 6,
-          "height": 1,
+          "height": 2,
           "x": 6,
           "y": 0,
           "type": "select",
@@ -268,20 +332,20 @@
             "propertyType": "org",
             "propertyTypeDisplay": "org",
             "parameterName": "neodash_org_org",
-            "backgroundColor": "#A3E4D7"
+            "backgroundColor": " #d4e6f1"
           }
         },
         {
           "title": "PROTOCOLOS",
           "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port)\nWHERE o.org = $neodash_org_org \nRETURN COUNT(DISTINCT p.number)",
-          "width": 2,
+          "width": 3,
           "height": 1,
-          "x": 3,
-          "y": 3,
+          "x": 4,
+          "y": 4,
           "type": "value",
           "selection": {},
           "settings": {
-            "backgroundColor": "#D2B4DE"
+            "backgroundColor": "#ebdef0"
           }
         },
         {
@@ -290,11 +354,11 @@
           "width": 3,
           "height": 1,
           "x": 0,
-          "y": 2,
+          "y": 3,
           "type": "value",
           "selection": {},
           "settings": {
-            "backgroundColor": "#D2B4DE"
+            "backgroundColor": "#ebdef0"
           }
         },
         {
@@ -303,11 +367,11 @@
           "width": 2,
           "height": 1,
           "x": 8,
-          "y": 2,
+          "y": 3,
           "type": "value",
           "selection": {},
           "settings": {
-            "backgroundColor": "#D2B4DE"
+            "backgroundColor": "#ebdef0"
           }
         },
         {
@@ -316,24 +380,24 @@
           "width": 2,
           "height": 1,
           "x": 10,
-          "y": 2,
+          "y": 3,
           "type": "value",
           "selection": {},
           "settings": {
-            "backgroundColor": "#D2B4DE"
+            "backgroundColor": "#ebdef0"
           }
         },
         {
           "title": "ACTIVOS REPETIDOS EN BASE A LAS CAPTURAS DE PANTALLA",
           "query": "MATCH (o:ORG)-[*]->(n:Screenshot)\nWHERE o.org = $neodash_org_org \nRETURN COUNT(DISTINCT ID(n)) AS unique_ids\n",
-          "width": 4,
+          "width": 12,
           "height": 1,
-          "x": 8,
-          "y": 3,
+          "x": 0,
+          "y": 9,
           "type": "value",
           "selection": {},
           "settings": {
-            "backgroundColor": "#D2B4DE"
+            "backgroundColor": "#ebdef0"
           }
         },
         {
@@ -342,7 +406,7 @@
           "width": 10,
           "height": 4,
           "x": 0,
-          "y": 4,
+          "y": 5,
           "type": "graph",
           "selection": {
             "ORG": "org",
@@ -350,8 +414,8 @@
             "Subred": "range"
           },
           "settings": {
-            "nodeColorScheme": "accent",
-            "backgroundColor": "#D2B4DE"
+            "nodeColorScheme": "set2",
+            "backgroundColor": "#ebdef0"
           }
         },
         {
@@ -360,7 +424,7 @@
           "width": 10,
           "height": 3,
           "x": 2,
-          "y": 19,
+          "y": 22,
           "type": "graph",
           "selection": {
             "ORG": "org",
@@ -370,7 +434,7 @@
             "Port": "number"
           },
           "settings": {
-            "backgroundColor": "#AED6F1",
+            "backgroundColor": " #d1f2eb ",
             "nodeColorScheme": "accent"
           }
         },
@@ -380,7 +444,7 @@
           "width": 2,
           "height": 3,
           "x": 0,
-          "y": 19,
+          "y": 22,
           "type": "select",
           "selection": {},
           "settings": {
@@ -389,7 +453,7 @@
             "propertyType": "number",
             "propertyTypeDisplay": "number",
             "parameterName": "neodash_port_number",
-            "backgroundColor": "#AED6F1"
+            "backgroundColor": " #d1f2eb "
           }
         },
         {
@@ -398,7 +462,7 @@
           "width": 12,
           "height": 2,
           "x": 0,
-          "y": 11,
+          "y": 14,
           "type": "bar",
           "selection": {
             "index": "atributo",
@@ -406,20 +470,20 @@
             "key": "(none)"
           },
           "settings": {
-            "backgroundColor": "#D2B4DE"
+            "backgroundColor": "#ebdef0"
           }
         },
         {
           "title": "Nº Activos/Protocolo",
           "query": "MATCH t=((o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port))\nWHERE o.org = $neodash_org_org\nRETURN p.number AS Servicios, COUNT(ip.address) AS Activos\n",
           "width": 3,
-          "height": 3,
+          "height": 4,
           "x": 0,
-          "y": 8,
+          "y": 10,
           "type": "table",
           "selection": {},
           "settings": {
-            "backgroundColor": "#D2B4DE"
+            "backgroundColor": "#ebdef0"
           }
         },
         {
@@ -428,7 +492,7 @@
           "width": 9,
           "height": 4,
           "x": 0,
-          "y": 31,
+          "y": 34,
           "type": "graph",
           "selection": {
             "ORG": "org",
@@ -439,7 +503,7 @@
             "Vulners": "(label)"
           },
           "settings": {
-            "backgroundColor": "#F5B7B1"
+            "backgroundColor": " #f9ebea "
           }
         },
         {
@@ -448,7 +512,7 @@
           "width": 12,
           "height": 3,
           "x": 0,
-          "y": 35,
+          "y": 38,
           "type": "graph",
           "selection": {
             "IP": "address",
@@ -457,7 +521,7 @@
             "ORG": "org"
           },
           "settings": {
-            "backgroundColor": "#F5B7B1",
+            "backgroundColor": " #f9ebea ",
             "nodeColorScheme": "accent"
           }
         },
@@ -467,7 +531,7 @@
           "width": 12,
           "height": 2,
           "x": 0,
-          "y": 13,
+          "y": 16,
           "type": "bar",
           "selection": {
             "index": "atributo",
@@ -475,7 +539,7 @@
             "key": "(none)"
           },
           "settings": {
-            "backgroundColor": "#D2B4DE"
+            "backgroundColor": "#ebdef0"
           }
         },
         {
@@ -484,7 +548,7 @@
           "width": 9,
           "height": 4,
           "x": 0,
-          "y": 27,
+          "y": 30,
           "type": "graph",
           "selection": {
             "ORG": "org",
@@ -494,20 +558,20 @@
             "Port": "number"
           },
           "settings": {
-            "backgroundColor": "#F5B7B1"
+            "backgroundColor": " #f9ebea "
           }
         },
         {
           "title": "PUERTOS ABIERTOS",
           "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port)\nWHERE o.org = $neodash_org_org\nRETURN COUNT(p.number)",
-          "width": 3,
+          "width": 4,
           "height": 1,
           "x": 0,
-          "y": 3,
+          "y": 4,
           "type": "value",
           "selection": {},
           "settings": {
-            "backgroundColor": "#D2B4DE"
+            "backgroundColor": "#ebdef0"
           }
         },
         {
@@ -516,11 +580,11 @@
           "width": 2,
           "height": 1,
           "x": 6,
-          "y": 2,
+          "y": 3,
           "type": "value",
           "selection": {},
           "settings": {
-            "backgroundColor": "#D2B4DE"
+            "backgroundColor": "#ebdef0"
           }
         },
         {
@@ -529,11 +593,11 @@
           "width": 3,
           "height": 8,
           "x": 9,
-          "y": 27,
+          "y": 30,
           "type": "table",
           "selection": {},
           "settings": {
-            "backgroundColor": "#F5B7B1"
+            "backgroundColor": " #f9ebea "
           }
         },
         {
@@ -542,7 +606,7 @@
           "width": 2,
           "height": 4,
           "x": 0,
-          "y": 22,
+          "y": 25,
           "type": "select",
           "selection": {},
           "settings": {
@@ -551,7 +615,7 @@
             "propertyType": "address",
             "propertyTypeDisplay": "address",
             "parameterName": "neodash_ip_address",
-            "backgroundColor": "#AED6F1"
+            "backgroundColor": " #d1f2eb "
           }
         },
         {
@@ -560,11 +624,11 @@
           "width": 3,
           "height": 1,
           "x": 3,
-          "y": 2,
+          "y": 3,
           "type": "value",
           "selection": {},
           "settings": {
-            "backgroundColor": "#D2B4DE"
+            "backgroundColor": "#ebdef0"
           }
         },
         {
@@ -573,7 +637,7 @@
           "width": 10,
           "height": 4,
           "x": 2,
-          "y": 22,
+          "y": 25,
           "type": "graph",
           "selection": {
             "ORG": "org",
@@ -583,7 +647,7 @@
             "Port": "number"
           },
           "settings": {
-            "backgroundColor": "#AED6F1",
+            "backgroundColor": " #d1f2eb ",
             "nodeColorScheme": "accent"
           }
         },
@@ -591,9 +655,9 @@
           "title": "GRUPOS DE ACTIVOS EN BASE A LAS CAPTURAS DE PANTALLA",
           "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[hp:HAS_PORT]->(p:Port)-[r:HAS_SCREENSHOT]->(scr:Screenshot)\nWHERE o.org = $neodash_org_org\nRETURN ip, hp, p, r, scr\n\n",
           "width": 9,
-          "height": 3,
+          "height": 4,
           "x": 3,
-          "y": 8,
+          "y": 10,
           "type": "graph",
           "selection": {
             "IP": "address",
@@ -601,7 +665,8 @@
             "Screenshot": "(label)"
           },
           "settings": {
-            "backgroundColor": "#D2B4DE"
+            "backgroundColor": "#ebdef0",
+            "nodeColorScheme": "accent"
           }
         },
         {
@@ -610,7 +675,7 @@
           "width": 12,
           "height": 1,
           "x": 0,
-          "y": 38,
+          "y": 41,
           "type": "text",
           "selection": {},
           "settings": {
@@ -623,7 +688,7 @@
           "width": 12,
           "height": 1,
           "x": 0,
-          "y": 26,
+          "y": 29,
           "type": "text",
           "selection": {},
           "settings": {
@@ -636,7 +701,7 @@
           "width": 12,
           "height": 1,
           "x": 0,
-          "y": 1,
+          "y": 2,
           "type": "text",
           "selection": {},
           "settings": {
@@ -645,15 +710,15 @@
         },
         {
           "title": "",
-          "query": "## INFORMACIÓN ESPECÍFICA POR ORGANIZACIÓN\n\n### Para cambiar de organización modifica la tarjeta de la derecha --------->\n\n\n",
+          "query": "# INFORMACIÓN ESPECÍFICA POR ORGANIZACIÓN\n\n## Índice\n\n- Elementos infromativos\n- Búsqueda dinámica\n- Posibles elementos críticos\n- Control de cambios\n\n\n",
           "width": 6,
-          "height": 1,
+          "height": 2,
           "x": 0,
           "y": 0,
           "type": "text",
           "selection": {},
           "settings": {
-            "backgroundColor": "#48C9B0"
+            "backgroundColor": " #5dade2 "
           }
         },
         {
@@ -662,7 +727,7 @@
           "width": 12,
           "height": 3,
           "x": 0,
-          "y": 16,
+          "y": 19,
           "type": "table",
           "selection": {},
           "settings": {
@@ -675,7 +740,7 @@
                 "customizationValue": "black"
               }
             ],
-            "backgroundColor": "#AED6F1"
+            "backgroundColor": " #d1f2eb "
           }
         },
         {
@@ -683,30 +748,30 @@
           "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port)\nWHERE (o.org = $neodash_org_org) AND (p.number IN ['20','21','23','80','8080'])\nRETURN COUNT(p.number)",
           "width": 3,
           "height": 1,
-          "x": 5,
-          "y": 3,
+          "x": 7,
+          "y": 4,
           "type": "value",
           "selection": {},
           "settings": {
-            "backgroundColor": "#D2B4DE"
+            "backgroundColor": "#ebdef0"
           }
         },
         {
           "title": "Subredes /24",
-          "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)\nWHERE ip.address =~ '\\\\d+\\\\.\\\\d+\\\\.\\\\d+\\\\.\\\\d+' and o.org = $neodash_org_org \nWITH ip, split(ip.address, '.') AS octets\nRETURN DISTINCT octets[0] + '.' + octets[1] + '.' + octets[2] + '.0/24' AS subred\n\n\n\n\n",
+          "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)\nWHERE o.org = $neodash_org_org \nRETURN DISTINCT sub.range\n\n\n\n",
           "width": 2,
-          "height": 3,
+          "height": 4,
           "x": 10,
           "y": 5,
           "type": "table",
           "selection": {},
           "settings": {
-            "backgroundColor": "#D2B4DE"
+            "backgroundColor": "#ebdef0"
           }
         },
         {
           "title": "Nº subredes /24",
-          "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)\nWHERE ip.address =~ '\\\\d+\\\\.\\\\d+\\\\.\\\\d+\\\\.\\\\d+' and o.org = $neodash_org_org \nWITH ip, split(ip.address, '.') AS octets\nRETURN COUNT(DISTINCT octets[0] + '.' + octets[1] + '.' + octets[2] + '.0/24') AS subred\n\n\n\n\n\n",
+          "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)\nWHERE o.org = $neodash_org_org \nRETURN COUNT(DISTINCT sub.range)\n\n\n\n\n\n",
           "width": 2,
           "height": 1,
           "x": 10,
@@ -714,7 +779,7 @@
           "type": "value",
           "selection": {},
           "settings": {
-            "backgroundColor": "#D2B4DE"
+            "backgroundColor": "#ebdef0"
           }
         },
         {
@@ -723,11 +788,11 @@
           "width": 12,
           "height": 1,
           "x": 0,
-          "y": 15,
+          "y": 18,
           "type": "text",
           "selection": {},
           "settings": {
-            "backgroundColor": "#3498DB"
+            "backgroundColor": "#48C9B0"
           }
         },
         {
@@ -736,7 +801,7 @@
           "width": 9,
           "height": 1,
           "x": 3,
-          "y": 39,
+          "y": 42,
           "type": "select",
           "selection": {},
           "settings": {
@@ -754,7 +819,7 @@
           "width": 3,
           "height": 2,
           "x": 0,
-          "y": 39,
+          "y": 42,
           "type": "table",
           "selection": {},
           "settings": {
