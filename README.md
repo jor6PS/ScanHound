@@ -10,11 +10,15 @@ Esto generará un escaneo y guardará los resultados en una estructura de carpet
 
 ### IMPORTAR RESULTADO A LA BBDD NEO4J
 
-Para cargar los resultados en la BBDD Neo4j simplemente ejecutar el script **Scan2Neo.py**
+Para cargar los resultados en la BBDD Neo4j simplemente ejecutar el script **Scan2Neo.py -r <ip Neo4j>**
 
-El resultado en Neo4 por el momento se muestar de la sigueitne manera:
+El resultado en Neo4j por el momento se muestar de la sigueitne manera:
 
 ![Alt text](https://github.com/jor6PS/ScanHound/blob/main/images/grafo_scanhound_4.png?raw=true "Estado actual")
+
+La aplicación NeoDash se mantiene en constante comunicación con la BBDD de Neo4j y este es el Dashboard creado para presentar los escaneos realizados:
+
+![Alt text](https://github.com/jor6PS/ScanHound/blob/main/images/grafo_scanhound_4.png?raw=true "Dashboard")
 
 ### DEPENDENCIAS
 
