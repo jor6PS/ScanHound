@@ -19,7 +19,7 @@ El resultado en Neo4j por el momento se muestar de la sigueitne manera:
 
 La aplicación NeoDash se mantiene en constante comunicación con la BBDD de Neo4j y este es el Dashboard creado para presentar los escaneos realizados:
 
-![Alt text](https://github.com/jor6PS/ScanHound/blob/main/images/grafo_scanhound_4.png?raw=true "Dashboard")
+![Alt text](https://github.com/jor6PS/ScanHound/blob/main/images/NeoDash%20-%20Neo4j%20Dashboard%20Builder%20%E2%80%94%20Mozilla%20Firefox%202023-06-12%2013-56-03.gif "Dashboard")
 
 ### DEPENDENCIAS
 
