@@ -42,11 +42,4 @@ Para instalar las dependencias, estos son los únicos pasos
 - Incluir un departamento nuevo para el control de cambios de activos y servicios entre escaneos con fechas diferentes - HALF DONE
 - Escala logarítmica para el gráfico coparativos entre organiaciones, Para los valores, sacar porcentaje del total de activos por cada organización - HALF DONE
 ---------
-- Actualizar el README 
-## QUERIES
-
-MATCH x=(o:ORG)-[:HAS_SEG]->(s:SEG)-[:HAS_SUBNET]->(sb:Subnet)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port)
-Where p.number="80"
-RETURN x
-
-![Alt text](https://github.com/jor6PS/ScanHound/blob/main/images/grafo_scanhound_2.png?raw=true "Resultado consulta")
+- Actualizar el README
