@@ -758,7 +758,7 @@
         },
         {
           "title": "Subredes /24",
-          "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)\nWHERE o.org = $neodash_org_org \nRETURN DISTINCT sub.range\n\n\n\n",
+          "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)\nWHERE o.org = $neodash_org_org \nRETURN DISTINCT sub.range AS Subredes\n\n\n\n",
           "width": 2,
           "height": 4,
           "x": 10,
