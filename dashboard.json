@@ -385,7 +385,7 @@
           }
         },
         {
-          "title": "VULNERS",
+          "title": "VULNERAVILIDADES",
           "query": "MATCH (o:ORG)-[:HAS_SEG]->(seg:SEG)-[:HAS_VISIBILITY]->(sub:Subred)-[:HAS_IP]->(ip:IP)-[:HAS_PORT]->(p:Port)-[:HAS_VULNS]->(vulns:Vulners)\nWHERE o.org = $neodash_org_org \nRETURN COUNT(vulns)\n\n",
           "width": 2,
           "height": 1,
