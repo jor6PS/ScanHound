@@ -26,6 +26,7 @@ La aplicación NeoDash se mantiene en constante comunicación con la BBDD de Neo
 Para instalar las dependencias en scanhound.py, estos son los únicos pasos 
 - Instalar la librería 'python-nmap' (pip install python-nmap)
 - Instalar el driver de Selenium, que se puede encontrar en la url 'https://github.com/mozilla/geckodriver/releases' y moverlo a la ruta /usr/local/bin
+
 Para instalar las dependencias en scan2neo.py, estos son los únicos pasos
 - Instalar la librería 'py2neo' (pip install py2neo)
 - Ejecutar neo4j (sudo neo4j console)
