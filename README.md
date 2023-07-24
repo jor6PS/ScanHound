@@ -21,11 +21,15 @@ La aplicación NeoDash se mantiene en constante comunicación con la BBDD de Neo
 
 ![Alt text](https://github.com/jor6PS/ScanHound/blob/main/images/NeoDash%20-%20Neo4j%20Dashboard%20Builder%20%E2%80%94%20Mozilla%20Firefox%202023-06-12%2013-56-03.gif "Dashboard")
 
-### DEPENDENCIAS
+### INSTALACIÓN (PRIMERA VEZ)
 
-Para instalar las dependencias, estos son los únicos pasos 
-- isntalar la libreria 'python-nmap'
-- instalar el driver de Selenium, que se puede encontrar en la url 'https://github.com/mozilla/geckodriver/releases' y moverlo a la ruta /usr/local/bin
+Para instalar las dependencias en scanhound.py, estos son los únicos pasos 
+- Instalar la librería 'python-nmap' (pip install python-nmap)
+- Instalar el driver de Selenium, que se puede encontrar en la url 'https://github.com/mozilla/geckodriver/releases' y moverlo a la ruta /usr/local/bin
+Para instalar las dependencias en scan2neo.py, estos son los únicos pasos
+- Instalar la librería 'py2neo' (pip install py2neo)
+- Ejecutar neo4j (sudo neo4j console)
+- Ejecutar neodash para visualizar los Dashboards (sudo docker run -it --rm -p 5005:5005 neo4jlabs/neodash)
 
 ## TODO
 
